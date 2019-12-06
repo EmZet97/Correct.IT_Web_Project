@@ -1,0 +1,116 @@
+/* Global elements */
+
+.text{    
+    font-weight: bold;
+    color: #707070 !important;
+    font-family: "Gill Sans MT";
+}
+
+#pageTitle{
+    font-weight: bold;
+    color: #707070 !important;
+    font-family: "Gill Sans MT";
+    font-size: 40px;
+}
+
+#pageTitle{
+    text-align: center;
+    font-size: 25px;
+}
+
+/* ---------- */
+
+/* Page navbar */
+
+#navbar{
+background-color: white !important;
+}
+
+#pageName{
+    font-weight: bold;
+    color: #707070;
+    font-family: "Gill Sans MT";
+    font-size: 30px;
+}
+
+@media only screen and (max-width: 550px) {
+    #pageName {
+      display: none;
+    }
+
+    .navbardivs{
+        margin: 0 !important;
+        padding: 0 !important;
+        width: 50% !important;
+        text-align: center;
+    }
+    .form-inline{
+        width: 100vw !important;
+    }
+  }
+
+#starIcon{    
+    color: #FB9F26;
+}
+
+#userIcon{
+    color: #3CA78D;
+}
+
+#navbar{
+    background-color: white;
+}
+
+
+/* ---------- */
+
+/* My Docs */
+
+
+.doc-columns{
+    text-align: center;
+}
+
+.doc{    
+    border: 1px solid #707070;
+    margin: 0 auto;
+    margin: 5px;
+}
+
+.doc-header{
+    height: 50px;
+    border-bottom: 1px solid black;
+}
+
+.doc-content{
+    height: 200px;
+
+}
+
+.doc-footer{
+    height: 50px;
+}
+
+.doc-icon{
+    display: inline;
+    font-size: 30px !important;
+    margin: 10px;
+    float: left;
+    
+}
+
+.doc-owner{
+    display: inline;
+    font-size: 20px;
+    margin-top: 12px;
+    float: left;
+}
+
+.doc-create-time{
+    font-size: 15px;
+    display: inline;
+    float: right;
+    margin: 15px;
+    padding: 0;
+    color: #AAAEB1 !important;
+}
