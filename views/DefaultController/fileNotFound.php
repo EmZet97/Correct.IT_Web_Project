@@ -6,7 +6,7 @@
 <body>
 <?php include(dirname(__DIR__).'/navbar.html'); ?>
 
-<h2>File not found</h2>
+<img src="../../public/images/NotFoundImage.png"/>
 
 </body>
 </html>

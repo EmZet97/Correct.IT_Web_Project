@@ -6,6 +6,8 @@
 <body>
 <?php include(dirname(__DIR__).'/navbar.html'); ?>
 
+<?php include(dirname(__DIR__).'/footer.html'); ?>
+
 <div class="container">
     <div class="row">
         <h1 class="col-12">HOMEPAGE</h1>

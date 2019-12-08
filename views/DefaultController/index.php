@@ -8,7 +8,7 @@
 
 <div class="container">
     <div class="row">
-        <h1 class="col-12">HOMEPAGE</h1>
+        <h1 class="col-12">index</h1>
         <p>
             <?= $text ?>
         </p>

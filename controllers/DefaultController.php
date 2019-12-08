@@ -54,8 +54,6 @@ class DefaultController extends AppController
 
     public function logout()
     {
-        $this->render('logout');
-        return;
         session_unset();
         session_destroy();
 
