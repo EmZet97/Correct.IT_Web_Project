@@ -1,5 +1,5 @@
 <?php
-const SERVERNAME = '';
-const USERNAME = '';
+const SERVERNAME = 'localhost';
+const USERNAME = 'root';
 const PASSWORD = '';
-const DATABASE = '';
+const DATABASE = 'pai';

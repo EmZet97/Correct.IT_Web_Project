@@ -1,11 +1,20 @@
 <?php
+require_once 'User.php';
 
-class User
+class Document
 {
+    private $owner_id;
+    private $owner_nick;
+    
     private $id;
-    private $nick;
-    private $email;
-    private $password;
+    private $title;
+    private $category1;
+    private $category2;
+    private $category3;
+    private $content;
+
+    private $version;
+    
 
     public function __construct($id, $nick, $email, $password)
     {

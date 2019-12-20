@@ -5,7 +5,6 @@
 
 <body>
 <?php include(dirname(__DIR__).'/navbar.html'); ?>
-
 <?php include(dirname(__DIR__).'/footer.html'); ?>
 
 <section class="jumpers">
@@ -14,6 +13,8 @@
         <div class="row">
             
             <?php
+            
+
             for ($x = 0; $x <= 10; $x++){
                 $nick = "user" . $x;
                 $time = "2h ago";

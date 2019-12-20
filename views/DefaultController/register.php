@@ -7,52 +7,54 @@
 
 <div class="container">
     <div clas="row">
-        <div class="col-sm-6 offset-sm-3">
-            <h1 class="panel-header">REGISTER</h1>
-            <hr>
-            <?php if(isset($message)): ?>
-                <?php foreach($message as $item): ?>
-                    <div><?= $item ?></div>
-                <?php endforeach; ?>
-            <?php endif; ?>
-
-            <form action="?page=register" method="POST">
-                <div class="form-group row">
-                    <label for="inputName" class="col-sm-1 col-form-label">
-                        <i class="material-icons md-48">android</i>
-                    </label>
-                    <div class="col-sm-11">
-                        <input type="text" class="form-control" id="inputName" name="name" placeholder="name" required/>
-                    </div>
+        <div class="col-12 col-sm-10 offset-sm-1 col-lg-8 offset-lg-2" id="loginPanel">
+            <h1 class="panel-header">CORRECT.IT</h1>
+            <h2 class="panel-bottom-header">Poprawiaj, komentuj, oceniaj</h2>
+            <br>
+            <br>
+            <br>           
+            
+            <form action="?page=login" method="POST" class="row">
+               <!-- EMAIL -->
+                <div class="panel-input-div col-12 col-sm-10 offset-sm-1 col-lg-8 offset-lg-2">
+                   <h3 class="panel-input-title">E-mail:</h3>
                 </div>
-
-                <div class="form-group row">
-                    <label for="inputSurname" class="col-sm-1 col-form-label">
-                        <i class="material-icons md-48">credit_card</i>
-                    </label>
-                    <div class="col-sm-11">
-                        <input type="text" class="form-control" id="inputSurname" name="surname" placeholder="surname" required/>
-                    </div>
+               <div class="panel-input-div col-12 col-sm-10 offset-sm-1 col-lg-8 offset-lg-2">
+                   <input type="email" name="email" class="panel-text-input" id="inputEmail" placeholder="john.wick@love.guns" required/>
                 </div>
-
-
-                <div class="form-group row">
-                    <label for="inputEmail" class="col-sm-1 col-form-label">
-                        <i class="material-icons md-48">email</i>
-                    </label>
-                    <div class="col-sm-11">
-                        <input type="email" class="form-control" id="inputEmail" name="email" placeholder="email" required/>
-                    </div>
+                <!-- NICK -->
+                <div class="panel-input-div col-12 col-sm-10 offset-sm-1 col-lg-8 offset-lg-2">
+                   <h3 class="panel-input-title">Nick:</h3>
                 </div>
-                <div class="form-group row">
-                    <label for="inputPassword" class="col-sm-1 col-form-label">
-                        <i class="material-icons md-48">person</i>
-                    </label>
-                    <div class="col-sm-11">
-                        <input type="password" name="password" class="form-control" id="inputPassword" placeholder="password" type="password" required/>
-                    </div>
+               <div class="panel-input-div col-12 col-sm-10 offset-sm-1 col-lg-8 offset-lg-2">
+                   <input type="text" name="email" class="panel-text-input" id="inputEmail" placeholder="wicky" required/>
                 </div>
-                <input type="submit" value="Register" class="btn btn-primary btn-lg float-right" />
+                <!-- PASSWORDS -->
+                <div class="panel-input-div col-12 col-sm-10 offset-sm-1 col-lg-8 offset-lg-2">
+                   <h3 class="panel-input-title">Hasło:</h3>
+                </div>
+               <div class="panel-input-div col-12 col-sm-10 offset-sm-1 col-lg-8 offset-lg-2">
+                   <input type="password" name="password" class="panel-text-input" id="inputPassword" placeholder="Doghunter123" required eq/>
+               </div>
+               <div class="panel-input-div col-12 col-sm-10 offset-sm-1 col-lg-8 offset-lg-2">
+                   <h3 class="panel-input-title">Powtórz hasło:</h3>
+                </div>
+               <div class="panel-input-div col-12 col-sm-10 offset-sm-1 col-lg-8 offset-lg-2">
+                   <input type="password" name="password" class="panel-text-input" id="inputPassword" placeholder="Doghunter123" required/>
+               </div>
+               <!-- BUTTONS -->
+               <div class="panel-input-div col-8 offset-2 col-lg-4 offset-lg-4">
+                   <input type="submit" class="panel-button-input" value="Zarejestruj"/>
+               </div>
+               <div class="panel-input-div col-6 offset-3 col-lg-4 offset-lg-8">
+                   <h3 class="panel-button-title">Posiadasz już konto?</h3>
+                </div>
+               <div class="panel-input-div col-6 offset-3 col-lg-4 offset-lg-8">
+                   <a href="/?page=login" class="panel-button-link">Zaloguj</a>
+               </div>
+                
+                
+                
             </form>
         </div>
     </div>

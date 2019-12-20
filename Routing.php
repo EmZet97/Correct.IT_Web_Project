@@ -30,21 +30,21 @@ class Routing
                 'controller' => 'DefaultController',
                 'action' => 'fileNotFound'
             ],
-            'browse' => [
+            'browseDocs' => [
                 'controller' => 'DocsController',
-                'action' => 'browse'
+                'action' => 'browseDocs'
             ],
-            'correct' => [
+            'correctDoc' => [
                 'controller' => 'DocsController',
-                'action' => 'correct'
+                'action' => 'correctDoc'
             ],
-            'create' => [
+            'createDoc' => [
                 'controller' => 'DocsController',
-                'action' => 'crate'
+                'action' => 'createDoc'
             ],
-            'edit' => [
+            'editDoc' => [
                 'controller' => 'DocsController',
-                'action' => 'edit'
+                'action' => 'editDoc'
             ],
             'myDocs' => [
                 'controller' => 'DocsController',
@@ -56,7 +56,6 @@ class Routing
     public function run()
     {        
         $page = isset($_GET['page']) && isset($this->routes[$_GET['page']]) ? $_GET['page'] : 'login';        
-        
 
         if ($this->routes[$page]) {
             //echo "Hello there! :) Jesteś w:" . $this->routes[$page]['controller'] . "/" . $this->routes[$page]['action'] ;

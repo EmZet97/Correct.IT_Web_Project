@@ -3,7 +3,7 @@
 require_once "AppController.php";
 
 require_once __DIR__.'/../model/User.php';
-require_once __DIR__.'/../model/UserMapper.php';
+require_once __DIR__.'/../model/UserManager.php';
 
 
 class DefaultController extends AppController
@@ -22,31 +22,32 @@ class DefaultController extends AppController
     }
 
     public function login()
-    {
-        $this->render('login');
-        return;
-        $mapper = new UserMapper();
-
-        $user = null;
+    {   
+        $userManager = new UserManager();
 
         if ($this->isPost()) {
+            $email = $_POST['email'];
+            $password = $_POST['password'];
 
-            $user = $mapper->getUser($_POST['email']);
+            $user = $userManager->getUser($email);
 
-            if(!$user) {
-                return $this->render('login', ['message' => ['Email not recognized']]);
+            if (!$user) {
+                $this->render('login', ['messages' => ['Incorrect nick or email']]);
+                return;
             }
 
-            if ($user->getPassword() !== md5($_POST['password'])) {
-                return $this->render('login', ['message' => ['Wrong password']]);
-            } else {
-                $_SESSION["id"] = $user->getEmail();
-                $_SESSION["role"] = $user->getRole();
-
-                $url = "http://$_SERVER[HTTP_HOST]/";
-                header("Location: {$url}?page=index");
-                exit();
+            if ($user->getPassword() !== $password) {
+                $this->render('login', ['messages' => ['Incorrect password']]);
+                return;
             }
+
+            session_start();
+            $_SESSION["id"] = $user->getId();
+            $_SESSION["nick"] = $user->getNick();
+
+            $url = "http://$_SERVER[HTTP_HOST]/";
+            header("Location: {$url}?page=myDocs");
+            return;
         }
 
         $this->render('login');

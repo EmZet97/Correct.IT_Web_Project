@@ -26,7 +26,7 @@ class AppController
     {
         $view = $fileName ? dirname(__DIR__).'//views//'.get_class($this).'//'.$fileName.'.php' : '';
 
-        $output = 'File not found';
+        $output = 'File not found:'. $view;
 
             if (file_exists($view)) {
 
