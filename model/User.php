@@ -6,14 +6,20 @@ class User
     private $nick;
     private $email;
     private $password;
+    private $avatar;
+    private $points;
 
-    public function __construct($id, $nick, $email, $password)
+    public function __construct($id, $nick, $email = "", $password = "", $points="0", $avatar = "avatar.jpg")
     {
         $this->id = $id;
         $this->nick = $nick;
         $this->email = $email;
         $this->password = $password;
+        $this->points = $points;
+        $this->avatar = $avatar;
     }
+
+    
 
     public function getNick()
     {
@@ -48,6 +54,11 @@ class User
     public function getId()
     {
         return $this->id;
+    }
+
+    public function getPoints()
+    {
+        return $this->points;
     }
 
 }

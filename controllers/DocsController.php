@@ -2,8 +2,8 @@
 
 require_once "AppController.php";
 
-require_once __DIR__.'/../model/User.php';
-require_once __DIR__.'/../model/UserManager.php';
+require_once __DIR__.'/../model/Document.php';
+require_once __DIR__.'/../model/DocumentManager.php';
 
 
 class DocsController extends AppController
@@ -16,6 +16,7 @@ class DocsController extends AppController
 
     public function index()
     {
+        $this->checkSession();
         //$text = 'Hello there! Its docs part';
         $text = 'Hello there 👋';
         $this->render('my', ['text' => $text]);
@@ -23,6 +24,7 @@ class DocsController extends AppController
 
     public function browseDocs()
     {
+        $this->checkSession();
         /*
             pobieranie z bazy przykładowych dokumentów
         */
@@ -33,6 +35,7 @@ class DocsController extends AppController
 
     public function createDoc()
     {
+        $this->checkSession();
         $text = 'Hello there 👋';
         $this->render('createDoc', ['text' => $text]);
         return;
@@ -40,6 +43,7 @@ class DocsController extends AppController
 
     public function correctDoc()
     {
+        $this->checkSession();
         $text = 'Hello there 👋';
         $this->render('correctDoc', ['text' => $text]);
         return;
@@ -47,6 +51,7 @@ class DocsController extends AppController
 
     public function editDoc()
     {
+        $this->checkSession();
         $text = 'Hello there 👋';
         $this->render('editDoc', ['text' => $text]);
         return;
@@ -54,8 +59,19 @@ class DocsController extends AppController
 
     public function myDocs()
     {
-        $text = 'Hello there 👋';
-        $this->render('myDocs', ['text' => $text]);
+        $this->checkSession();
+        $docManager = new DocumentManager();        
+        $id = $_SESSION["id"];
+        $docs = $docManager->getUserDocuments($id);
+
+        $this->render('myDocs', ['docs' => $docs]);
         return;
+        
+
+    }
+
+    private function checkSession(){
+        if(!isset($_SESSION["id"]))
+            header("Location: {$url}?page=login");
     }
 }

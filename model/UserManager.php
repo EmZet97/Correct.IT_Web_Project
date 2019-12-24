@@ -24,7 +24,8 @@ class UserManager extends DatabaseConnector
             $user['id_user'],
             $user['nick'],
             $user['email'],
-            $user['password']
+            $user['password'],
+            $user['points']
         );
     }
 

@@ -7,7 +7,7 @@
         </div>
         <div class="navbar-brand navbardivs">
                 <i class="fas fa-star" id="starIcon"></i>
-                <a class="navbar-brand text">123</a>
+                <a class="navbar-brand text"><?php echo $_SESSION["points"]; ?></a>
         </div>
     </div>
   </nav>

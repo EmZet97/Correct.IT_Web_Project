@@ -44,6 +44,7 @@ class DefaultController extends AppController
             session_start();
             $_SESSION["id"] = $user->getId();
             $_SESSION["nick"] = $user->getNick();
+            $_SESSION["points"] = $user->getPoints();
 
             $url = "http://$_SERVER[HTTP_HOST]/";
             header("Location: {$url}?page=myDocs");
