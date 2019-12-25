@@ -14,7 +14,21 @@
             <br>
             <br>           
             
-            <form action="?page=login" method="POST" class="row">
+            <form action="?page=register" method="POST" class="row">
+            <!-- MESSAGE -->
+            <div class="panel-input-div col-12 col-sm-10 offset-sm-1 col-lg-8 offset-lg-2">
+                   <h3 class="panel-input-title red-message">
+                   <?php
+                        if(isset($messages)){
+
+                            foreach($messages as $message) {
+                                echo $message;
+                            }
+                            
+                        }
+                    ?>
+                   </h3>
+                </div>
                <!-- EMAIL -->
                 <div class="panel-input-div col-12 col-sm-10 offset-sm-1 col-lg-8 offset-lg-2">
                    <h3 class="panel-input-title">E-mail:</h3>
@@ -27,7 +41,7 @@
                    <h3 class="panel-input-title">Nick:</h3>
                 </div>
                <div class="panel-input-div col-12 col-sm-10 offset-sm-1 col-lg-8 offset-lg-2">
-                   <input type="text" name="email" class="panel-text-input" id="inputEmail" placeholder="wicky" required/>
+                   <input type="text" name="nick" class="panel-text-input" id="inputEmail" placeholder="wicky" required/>
                 </div>
                 <!-- PASSWORDS -->
                 <div class="panel-input-div col-12 col-sm-10 offset-sm-1 col-lg-8 offset-lg-2">

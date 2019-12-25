@@ -107,6 +107,11 @@ class Document
         return $this->words;
     }
 
+    public function setWords($value)
+    {
+        $this->words = $value;
+    }
+
     public function getLikes()
     {
         return $this->likes;

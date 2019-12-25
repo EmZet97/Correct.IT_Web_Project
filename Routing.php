@@ -42,6 +42,14 @@ class Routing
                 'controller' => 'DocsController',
                 'action' => 'createDoc'
             ],
+            'deleteDoc' => [
+                'controller' => 'DocsController',
+                'action' => 'deleteDoc'
+            ],
+            'createDoc_Execute' => [
+                'controller' => 'DocsController',
+                'action' => 'createDoc_Execute'
+            ],
             'editDoc' => [
                 'controller' => 'DocsController',
                 'action' => 'editDoc'

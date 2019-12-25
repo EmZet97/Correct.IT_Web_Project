@@ -9,26 +9,33 @@
 
 <section class="jumpers">
     <h2 id="pageTitle">Twoje prace</h2>
+    <div class="col-4 offset-4" id="createDocDiv"><a href="/?page=createDoc" id="createDocButton"><i class="fas fa-folder-plus"></i></a></div>
+     
     <div id="pageContent" class="container">
         <div class="row">
-            
-        <?php foreach($docs as $doc){
+           
+        <?php 
+        if(isset($docs))
+        foreach($docs as $doc){
                 $time = $doc->getLastEdit();
                 $title = $doc->getTitle();
                 $category1 = $doc->getCategory(1);
                 $category2 = $doc->getCategory(2);
                 $category3 = $doc->getCategory(3);
-                $words = 1234;
+                $words = $doc->getWords();
                 $language = $doc->getLanguage();
                 $likes = $doc->getLikes();
                 $comments =  $doc->getComments();
-                $check_page = "/?page=correctDoc&id=". $doc->getId();
+                $check_page = "/?page=editDoc&id=". $doc->getId();
+                $delete_page = "/?page=deleteDoc&id=". $doc->getId();
+                
                 
                 // HTML generator:
                 echo '
                 <div class="col-12 col-sm-6 col-lg-4 docs-columns">
                 <div class="doc">
                     <div class="doc-header">
+                        <a class="doc-delete-button" href="'. $delete_page . '"><i class="fas fa-times-circle"></i></a>
                         <h3 class="doc-create-time text">' . $time . '</h3>
                     </div>
                     <div class="doc-content">
@@ -55,7 +62,7 @@
                             <i class="fas fa-comment-alt comments"></i>
                             <h3 class="stats text">' . $comments . '</h3>
                         </div>
-                        <a href="' . $check_page . '" class="inline start_correct">Oceń pracę</a>
+                        <a href="' . $check_page . '" class="inline start_correct">Edytuj pracę</a>
                     </div>
                 </div>
             </div>

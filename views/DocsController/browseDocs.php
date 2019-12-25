@@ -12,21 +12,20 @@
     <div id="pageContent" class="container">
         <div class="row">
             
-            <?php
-            
-
-            for ($x = 0; $x <= 10; $x++){
-                $nick = "user" . $x;
-                $time = "2h ago";
-                $title = "Tytuł" . $x;
-                $category1 = "kategoria 1";
-                $category2 = "kategoria 2";
-                $category3 = "kategoria 3";
-                $words = 1234;
-                $language = "Polski";
-                $likes = $x * 100;
-                $comments = $x * 123;
-                $check_page = "/?page=correct&id=blabla";
+        <?php         
+        if(isset($docs))
+        foreach($docs as $doc){
+                $time = $doc->getLastEdit();
+                $title = $doc->getTitle();
+                $category1 = $doc->getCategory(1);
+                $category2 = $doc->getCategory(2);
+                $category3 = $doc->getCategory(3);
+                $words = $doc->getWords();
+                $language = $doc->getLanguage();
+                $likes = $doc->getLikes();
+                $comments =  $doc->getComments();
+                $check_page = "/?page=correctDoc&id=". $doc->getId();
+                $nick = $doc->getOwnerNick();
                 
                 // HTML generator:
                 echo '

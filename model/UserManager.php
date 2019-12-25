@@ -53,6 +53,61 @@ class UserManager extends DatabaseConnector
         }
     }
 
+    public function createUser($user): void
+    {
+        $nick = $user->getNick();
+        $email = $user->getEmail();
+        $password = $user->getPassword();
+        $points = $user->getPoints();
+        $avatar = $user->getAvatar();
+        // DOCUMENT
+        $stmt = $this->database->connect()->prepare('
+                INSERT INTO `users` (`nick`, `email`, `password`, `points`, `avatar`) 
+                VALUES (:nick, :email, :password, :points, :avatar);
+            ');
+            $stmt->bindParam(':nick', $nick, PDO::PARAM_STR);
+            $stmt->bindParam(':email', $email, PDO::PARAM_STR);
+            $stmt->bindParam(':password', $password, PDO::PARAM_STR);
+            $stmt->bindParam(':points', $points, PDO::PARAM_STR);
+            $stmt->bindParam(':avatar', $avatar, PDO::PARAM_STR);
+            $stmt->execute();            
+    }
+
+    public function checkIfEmailExist(string $email): bool 
+    {
+        $stmt = $this->database->connect()->prepare('
+            SELECT * FROM users WHERE email = :email
+        ');
+        $stmt->bindParam(':email', $email, PDO::PARAM_STR);
+        $stmt->execute();
+
+        $user = $stmt->fetch(PDO::FETCH_ASSOC);
+
+        if($user == false) {
+            return false;
+        }
+
+        return true;
+    }
+
+    
+    public function checkIfNickExist(string $nick): bool 
+    {
+        $stmt = $this->database->connect()->prepare('
+            SELECT * FROM users WHERE nick = :nick
+        ');
+        $stmt->bindParam(':nick', $nick, PDO::PARAM_STR);
+        $stmt->execute();
+
+        $user = $stmt->fetch(PDO::FETCH_ASSOC);
+
+        if($user == false) {
+            return false;
+        }
+        
+        return true;
+    }
+
     public function delete(int $id): void
     {
         try {

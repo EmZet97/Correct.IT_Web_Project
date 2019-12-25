@@ -4,10 +4,11 @@
 <?php include(dirname(__DIR__).'/head.html'); ?>
 
 <body>
-<?php include(dirname(__DIR__).'/navbar.html'); ?>
+<?php include(dirname(__DIR__).'/navbar.php'); ?>
 
 <section class="jumpers">
     <h2 id="pageTitle">Stwórz pracę do oceny</h2>
+    <form action="?page=createDoc_Execute" method="POST">
     <div id="pageContent" class="container">
         <div class="row">
             <!-- Header of page -->
@@ -15,13 +16,13 @@
                 <input type="text" class="docFields" id="docTitle" name="title" placeholder="Tytuł dokumentu" required/>
             </div>
             <div class="col-4 docs-columns">
-                <input type="text" class="docFields docCategories" placeholder="Kategoria 1" required/>
+                <input type="text" class="docFields docCategories" name="c1" placeholder="Kategoria 1" required/>
             </div>
             <div class="col-4 docs-columns">
-                <input type="text" class="docFields docCategories" placeholder="Kategoria 2"/>
+                <input type="text" class="docFields docCategories" name="c2" placeholder="Kategoria 2"/>
             </div>
             <div class="col-4 docs-columns">
-                <input type="text" class="docFields docCategories" placeholder="Kategoria 3"/>
+                <input type="text" class="docFields docCategories" name="c3" placeholder="Kategoria 3"/>
             </div>
             <!-- EDITOR -->
             <div class="col-12 docs-columns">
@@ -42,11 +43,14 @@
                 });
                 </script>
             </div>
+            <input type="hidden" name="content" id="contentPacker"/>
 
         </div>
     </div>
+            
 
-    <button id="saveButton" class="fixedButton">Zapisz pracę</button>
+    <input type="submit" id="saveButton" class="fixedButton" onclick="CreateDocument()" value="Stworz"/>
+    </form>
 </section>
 
 <?php include(dirname(__DIR__).'/footer.html'); ?>

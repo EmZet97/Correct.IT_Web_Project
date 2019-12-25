@@ -39,4 +39,9 @@ class AppController
 
         print $output;
     }
+
+    private function checkSession(){
+        if(!isset($_SESSION["id"]))
+            header("Location: {$url}?page=login");
+    }
 }

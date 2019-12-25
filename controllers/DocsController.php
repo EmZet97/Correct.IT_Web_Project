@@ -25,11 +25,11 @@ class DocsController extends AppController
     public function browseDocs()
     {
         $this->checkSession();
-        /*
-            pobieranie z bazy przykładowych dokumentów
-        */
-        $text = 'Hello there 👋';
-        $this->render('browseDocs', ['text' => $text]);
+        $docManager = new DocumentManager();        
+        $id = $_SESSION["id"];
+        $docs = $docManager->getOtherUsersDocuments($id);
+
+        $this->render('browseDocs', ['docs' => $docs]);
         return;
     }
 
@@ -38,6 +38,42 @@ class DocsController extends AppController
         $this->checkSession();
         $text = 'Hello there 👋';
         $this->render('createDoc', ['text' => $text]);
+        return;
+    }
+
+    public function deleteDoc()
+    {
+        $this->checkSession();
+        $docId = $_GET['id'];
+        $docManager = new DocumentManager();
+        //echo $docId;
+        $docManager->deleteDocument($docId);
+        $this->myDocs();
+        return;
+    }
+
+    public function createDoc_Execute(){
+        $this->checkSession();
+        if (true) {
+            //echo "true";
+            $title = $_POST['title'];
+            $category1 = $_POST['c1'];
+            $category2 = $_POST['c2'];
+            $category3 = $_POST['c3'];
+            $content = $_POST['content'];
+            //echo $content;
+            $id = $_SESSION["id"];            
+            $docManager = new DocumentManager();
+            $owner = new User($id);
+            $document = new Document($owner, null, $title, null, 1, null, null, $category1, $category2, $category3);
+            $docManager->createDocument($document, $content);            
+
+        }
+        else{
+            //echo "false";
+        }
+
+        $this->myDocs();
         return;
     }
 
@@ -66,8 +102,6 @@ class DocsController extends AppController
 
         $this->render('myDocs', ['docs' => $docs]);
         return;
-        
-
     }
 
     private function checkSession(){

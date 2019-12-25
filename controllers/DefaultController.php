@@ -64,23 +64,40 @@ class DefaultController extends AppController
 
     public function register()
     {
-        $this->render('register');
-        return;
-        $mapper = new UserMapper();
+        
         $user = null;
 
         if ($this->isPost()) {
-            $user = new User(
-              $_POST['name'],
-              $_POST['surname'],
-              $_POST['email'],
-              md5($_POST['password'])
-            );
-            $mapper->setUser($user);
+            
+            
+            $userManager = new UserManager();
 
+            if($userManager->checkIfEmailExist($_POST['email'])){
+                $this->render('register', [
+                    'messages' => ['Wpisany email jest zajęty :(']
+                    ]);
+                return;
+            }
+
+            if($userManager->checkIfNickExist($_POST['nick'])){
+                $this->render('register', [
+                    'messages' => ['Wpisany nick jest zajęty :(']
+                    ]);
+                    return;
+                }
+
+                $user = new User(
+                    null,
+                  $_POST['nick'],
+                  $_POST['email'],
+                  $_POST['password']
+                );
+            $userManager->createUser($user);
             $this->render('login', [
-                'message' => ['You have been successful registrated! Please login.']
+                'messages' => ['Konto pomyślnie utworzone']
                 ]);
+
+            return;
         }
 
         $this->render('register');

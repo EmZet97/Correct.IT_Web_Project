@@ -351,6 +351,37 @@ background-color: #707070;
     
 }
 
+.doc-delete-button{
+    position: absolute;
+    right: 10px;
+    top: -5px;
+    background-color: white;
+    
+}
+
+.doc-delete-button:hover{
+    opacity: 0.6;
+}
+
+.doc-delete-button i{
+    font-size: 20px;
+    color: #707070;
+}
+
+#createDocButton{
+    font-size: 40px;
+    color: #707070;
+    margin: 0 auto;
+}
+
+#createDocDiv{
+    text-align: center;
+}
+
+#createDocButton:hover{
+    opacity: 0.6;
+}
+
 #loginPanel .panel-text-input{
     width: 100%;
     border: none;

@@ -9,7 +9,7 @@ class User
     private $avatar;
     private $points;
 
-    public function __construct($id, $nick, $email = "", $password = "", $points="0", $avatar = "avatar.jpg")
+    public function __construct($id, $nick = "", $email = "", $password = "", $points="0", $avatar = "avatar.jpg")
     {
         $this->id = $id;
         $this->nick = $nick;
@@ -59,6 +59,10 @@ class User
     public function getPoints()
     {
         return $this->points;
+    }
+
+    public function getAvatar(){
+        return $this->avatar;
     }
 
 }
