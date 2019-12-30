@@ -77,19 +77,54 @@ class DocsController extends AppController
         return;
     }
 
+
+    public function editDoc_Execute(){
+        $this->checkSession();
+        if (true) {
+            $content = $_POST['content'];
+            $docId = $_POST['docID'];
+            //echo $content;
+            $id = $_SESSION["id"];            
+            $docManager = new DocumentManager();
+            $owner = new User($id);
+            $document = new Document($owner, $docId, "", null, 1, null, null, "", "", "");
+            $docManager->updateDocument($document, $content);            
+
+        }
+        else{
+            //echo "false";
+        }
+
+        $this->myDocs();
+        return;
+    }
+
     public function correctDoc()
     {
         $this->checkSession();
-        $text = 'Hello there 👋';
-        $this->render('correctDoc', ['text' => $text]);
+        $docId = $_GET['id'];
+        $docManager = new DocumentManager();
+        $doc = $docManager->getDocument($docId);
+        //echo "document" . $doc;
+        $this->render('correctDoc', ['doc' => $doc]);
         return;
     }
 
     public function editDoc()
     {
         $this->checkSession();
-        $text = 'Hello there 👋';
-        $this->render('editDoc', ['text' => $text]);
+        $docId = $_GET['id'];
+        $docManager = new DocumentManager();
+        $doc = $docManager->getDocument($docId);
+
+        // GET FILE CONTENT
+        $file_name =  "Documents/" . $doc->getPath() . $docManager->path_project_connector . $docId . $docManager->path_version_connector . $doc->getVersion();
+        $file_manager = new FileManager();
+        $content = $file_manager->readFile($file_name);
+
+        $doc->setContent($content);
+        
+        $this->render('editDoc', ['doc' => $doc]);
         return;
     }
 

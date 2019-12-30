@@ -1,23 +1,31 @@
 <?php
 
 require_once 'Document.php';
+require_once 'FileManager.php';
 require_once __DIR__.'/DatabaseConnector.php';
 require_once 'User.php';
 
 class DocumentManager extends DatabaseConnector
 {
+    public $path_project_connector = "doc";
+    public $path_version_connector = "ver";
+
     public function getDocument(string $documentID): ?Document 
     {
         $stmt = $this->database->connect()->prepare('
-        SELECT u.id_user, u.nick, d.id_document, d.title, v.version_number, v.create_time, d.path, d.id_category_1, d.id_category_2, d.id_category_3, l.name AS "language"
-        FROM documents AS d, version AS v, users AS u, languages as l
-        WHERE d.id_document = :documentID 
-        AND d.id_document = v.id_document
-        AND d.id_owner = u.id_user 
-        AND d.id_language = d.id_language
-        ORDER BY v.id_version DESC 
-        LIMIT 1
-        ');
+        SELECT DISTINCT u.id_user, u.nick, d.id_document, v.words, d.title, v.version_number, v.id_version, v.create_time, d.path, 
+            (SELECT category.name FROM category WHERE category.id_category = d.id_category_1) AS "category1",
+            (SELECT category.name FROM category WHERE category.id_category = d.id_category_2) AS "category2",
+            (SELECT category.name FROM category WHERE category.id_category = d.id_category_3) AS "category3",
+            l.name AS "language"
+            FROM documents AS d, version AS v, users AS u, languages as l, category AS c
+            WHERE d.id_document = v.id_document 
+            AND d.id_document = :documentID
+            AND d.id_owner = u.id_user
+            AND v.id_version = (SELECT max(version.id_version) FROM version, documents WHERE version.id_document = d.id_document)
+            AND d.id_language = d.id_language
+            ORDER BY v.id_version DESC
+            ');
         $stmt->bindParam(':documentID', $documentID, PDO::PARAM_STR);
         $stmt->execute();
 
@@ -28,20 +36,21 @@ class DocumentManager extends DatabaseConnector
         }
 
         //echo $user['id_user'];
+        $owner = new User();
         $doc = new Document(
-            $document['id_user'],
-            $document['nick'],
-            $document['id_document'],
-            $document['title'],
-            $document['version_number'],
-            $document['language'],
-            $document['path'],
-            $document['create_time']
-        );
-        $doc->setCategory(1, $this->getCategory($document['id_category_1']));
-        $doc->setCategory(2, $this->getCategory($document['id_category_2']));
-        $doc->setCategory(3, $this->getCategory($document['id_category_3']));
-
+        $owner,
+        $document['id_document'],
+        $document['title'],
+        $document['version_number'],
+        $document['language'],
+        $document['path'],
+        $document['create_time'],
+        $document['category1'],
+        $document['category2'],
+        $document['category3']
+    );
+        
+        
         return $doc;
     }
 
@@ -64,10 +73,9 @@ class DocumentManager extends DatabaseConnector
     }
 
     public function getUserDocuments(string $userID)
-    {
-        
+    {        
             $stmt = $this->database->connect()->prepare('
-            SELECT DISTINCT u.id_user, u.nick, d.id_document, d.words, d.title, v.version_number, v.id_version, v.create_time, d.path, 
+            SELECT DISTINCT u.id_user, u.nick, d.id_document, v.words, d.title, v.version_number, v.id_version, v.create_time, d.path, 
             (SELECT category.name FROM category WHERE category.id_category = d.id_category_1) AS "category1",
             (SELECT category.name FROM category WHERE category.id_category = d.id_category_2) AS "category2",
             (SELECT category.name FROM category WHERE category.id_category = d.id_category_3) AS "category3",
@@ -118,7 +126,7 @@ class DocumentManager extends DatabaseConnector
     {
         
             $stmt = $this->database->connect()->prepare('
-            SELECT DISTINCT u.id_user, u.nick, d.id_document, d.words, d.title, v.version_number, v.id_version, v.create_time, d.path, 
+            SELECT DISTINCT u.id_user, u.nick, d.id_document, v.words, d.title, v.version_number, v.id_version, v.create_time, d.path, 
             (SELECT category.name FROM category WHERE category.id_category = d.id_category_1) AS "category1",
             (SELECT category.name FROM category WHERE category.id_category = d.id_category_2) AS "category2",
             (SELECT category.name FROM category WHERE category.id_category = d.id_category_3) AS "category3",
@@ -172,9 +180,10 @@ class DocumentManager extends DatabaseConnector
         $cat2 = $document->getCategory(2);
         $cat3 = $document->getCategory(3);
         $docID = $document->getId();
-        $path = "/user" . $userID;
+        $path = "user" . $userID;
         $version = 1;
         $words = str_word_count($content);
+
         // DOCUMENT
         $stmt = $this->database->connect()->prepare('
                 INSERT INTO `documents` (`id_owner`, `id_language`, `title`, `path`, `words`, `id_category_1`, `id_category_2`, `id_category_3`) 
@@ -193,13 +202,52 @@ class DocumentManager extends DatabaseConnector
         $create_time = date("Y-m-d");
         // VERSION
         $stmt = $this->database->connect()->prepare('
-                INSERT INTO `version` (`id_document`, `version_number`, `create_time`) 
-                VALUES (:id_document, :version_number, :create_time);
+                INSERT INTO `version` (`id_document`, `version_number`, `create_time`, `words`) 
+                VALUES (:id_document, :version_number, :create_time, :words);
             ');
-            $stmt->bindParam(':id_document', $documentId, PDO::PARAM_STR);
-            $stmt->bindParam(':version_number',$version, PDO::PARAM_STR);
-            $stmt->bindParam(':create_time',$create_time, PDO::PARAM_STR);
-            $stmt->execute();
+        $stmt->bindParam(':id_document', $documentId, PDO::PARAM_STR);
+        $stmt->bindParam(':version_number',$version, PDO::PARAM_STR);
+        $stmt->bindParam(':create_time',$create_time, PDO::PARAM_STR);
+        $stmt->bindParam(':words',$words, PDO::PARAM_STR);
+        $stmt->execute();
+
+        // WRITE CONTENT TO FILE
+        $file_name =  "Documents/" . $path . $this->path_project_connector . $documentId . $this->path_version_connector . $version;
+        $file_manager = new FileManager();
+        $file_manager->writeFile($file_name, $content);
+        
+    }
+
+    public function updateDocument($document, $content): void
+    {
+        $userID = $document->getOwnerId();
+        $title = $document->getTitle();
+        $cat1 = $document->getCategory(1);
+        $cat2 = $document->getCategory(2);
+        $cat3 = $document->getCategory(3);
+        $docID = $document->getId();
+        $path = "user" . $userID;
+        $version = intval($this->getDocumentLastVersion($docID)) + 1;
+        $words = str_word_count($content);
+
+            
+        $documentId = $this->getUserLastDocumentId($userID);
+        $create_time = date("Y-m-d");
+        // VERSION
+        $stmt = $this->database->connect()->prepare('
+                INSERT INTO `version` (`id_document`, `version_number`, `create_time`, `words`) 
+                VALUES (:id_document, :version_number, :create_time, :words);
+            ');
+        $stmt->bindParam(':id_document', $documentId, PDO::PARAM_STR);
+        $stmt->bindParam(':version_number',$version, PDO::PARAM_STR);
+        $stmt->bindParam(':create_time',$create_time, PDO::PARAM_STR);
+        $stmt->bindParam(':words',$words, PDO::PARAM_STR);
+        $stmt->execute();
+
+        // WRITE CONTENT TO FILE
+        $file_name =  "Documents/" . $path . $this->path_project_connector . $documentId . $this->path_version_connector . $version;
+        $file_manager = new FileManager();
+        $file_manager->writeFile($file_name, $content);
         
     }
 

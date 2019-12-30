@@ -54,6 +54,10 @@ class Routing
                 'controller' => 'DocsController',
                 'action' => 'editDoc'
             ],
+            'editDoc_Execute' => [
+                'controller' => 'DocsController',
+                'action' => 'editDoc_Execute'
+            ],
             'myDocs' => [
                 'controller' => 'DocsController',
                 'action' => 'myDocs'

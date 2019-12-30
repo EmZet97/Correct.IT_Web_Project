@@ -18,6 +18,7 @@ class Document
     private $comments = 0;
 
     private $path;
+    private $content = "";
 
     private $version;
     
@@ -70,6 +71,14 @@ class Document
                 return $this->category_1;
                 break;
         }
+    }
+
+    public function setContent($content){
+        $this->content = $content;
+    }
+
+    public function getContent(){
+        return $this->content;
     }
 
     public function getOwnerId()
