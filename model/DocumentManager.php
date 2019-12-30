@@ -10,6 +10,26 @@ class DocumentManager extends DatabaseConnector
     public $path_project_connector = "doc";
     public $path_version_connector = "ver";
 
+    public function checkIfIsDocumentOwner($documentID, $userID){
+        $stmt = $this->database->connect()->prepare('
+        SELECT d.id_document
+            FROM documents AS d
+            AND d.id_document = :documentID
+            AND d.id_owner = :userID
+            ');
+        $stmt->bindParam(':documentID', $documentID, PDO::PARAM_STR);
+        $stmt->bindParam(':userID', $userID, PDO::PARAM_STR);
+        $stmt->execute();
+
+        $document = $stmt->fetch(PDO::FETCH_ASSOC);
+
+        if($document == false) {
+            return false;
+        }
+  
+        return true;
+    }
+    
     public function getDocument(string $documentID): ?Document 
     {
         $stmt = $this->database->connect()->prepare('
@@ -36,7 +56,7 @@ class DocumentManager extends DatabaseConnector
         }
 
         //echo $user['id_user'];
-        $owner = new User();
+        $owner = new User($document['id_user']);
         $doc = new Document(
         $owner,
         $document['id_document'],

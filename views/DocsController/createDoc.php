@@ -13,16 +13,34 @@
         <div class="row">
             <!-- Header of page -->
             <div class="col-12 docs-columns">
-                <input type="text" class="docFields" id="docTitle" name="title" placeholder="Tytuł dokumentu" required/>
+                <input type="text" class="docFields" id="docTitle" name="title" placeholder="Tytuł dokumentu" required/>                
             </div>
             <div class="col-4 docs-columns">
-                <input type="text" class="docFields docCategories" name="c1" placeholder="Kategoria 1" required/>
+            <select name="c1" class="docDropDownFields docCategories" onchange="ChangeCategory()">
+                    <option value="0"> </option>;
+                    <?php foreach($categories as $cat){
+                    echo "<option value=" . $cat->getId() . ">". $cat->getName() . "</option>";
+                    }
+                    ?>
+                </select>
             </div>
             <div class="col-4 docs-columns">
-                <input type="text" class="docFields docCategories" name="c2" placeholder="Kategoria 2"/>
+            <select name="c2" class="docDropDownFields docCategories" onchange="ChangeCategory()">
+                    <option value="0"> </option>;
+                    <?php foreach($categories as $cat){
+                    echo "<option value=" . $cat->getId() . ">". $cat->getName() . "</option>";
+                    }
+                    ?>
+                </select>
             </div>
             <div class="col-4 docs-columns">
-                <input type="text" class="docFields docCategories" name="c3" placeholder="Kategoria 3"/>
+            <select name="c3" class="docDropDownFields docCategories" onchange="ChangeCategory()">
+                    <option value="0"> </option>;
+                    <?php foreach($categories as $cat){
+                    echo "<option value=" . $cat->getId() . ">". $cat->getName() . "</option>";
+                    }
+                    ?>
+                </select>
             </div>
             <!-- EDITOR -->
             <div class="col-12 docs-columns">

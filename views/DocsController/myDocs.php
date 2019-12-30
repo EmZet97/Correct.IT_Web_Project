@@ -62,15 +62,19 @@
                             <i class="fas fa-comment-alt comments"></i>
                             <h3 class="stats text">' . $comments . '</h3>
                         </div>
-                        <a href="' . $check_page . '" class="inline start_correct">Edytuj pracę</a>
+                        <a href="' . $check_page . '" class="inline start_correct">Edytuj zawartość</a>
                     </div>
                 </div>
             </div>
                 '; // html end
             }
             ?>
+
         </div>
     </div>
+    <br>
+    <br>
+    <br>
 </section>
 
 </body>

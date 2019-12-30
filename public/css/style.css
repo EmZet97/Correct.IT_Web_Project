@@ -24,6 +24,9 @@
     float: left;
 }
 
+select option[disabled] {
+    display: none;
+}
 /* ---------- */
 
 /* Page navbar */
@@ -312,6 +315,15 @@ background-color: white !important;
     font-family: "Gill Sans MT";
     color: #707070;
     padding: 10px;
+}
+
+.docDropDownFields{
+    height: 30px;
+    border: 1px solid #b9b9b9;
+    width: 100%;
+    margin: 0px 0 10px 0;    
+    font-family: "Gill Sans MT";
+    color: #707070;
 }
 
 #editor{

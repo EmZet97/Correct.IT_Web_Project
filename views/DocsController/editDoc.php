@@ -48,7 +48,7 @@
     </div>
             
 
-    <input type="submit" id="saveButton" class="fixedButton" onclick="CreateDocument()" value="Zapisz"/>
+    <input type="submit" id="saveButton" class="fixedButton" onclick="CreateDocument()" value="Zapisz nową wersję"/>
     </form>
 </section>
 

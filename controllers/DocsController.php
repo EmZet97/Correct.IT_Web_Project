@@ -4,6 +4,7 @@ require_once "AppController.php";
 
 require_once __DIR__.'/../model/Document.php';
 require_once __DIR__.'/../model/DocumentManager.php';
+require_once __DIR__.'/../model/CategoriesManager.php';
 
 
 class DocsController extends AppController
@@ -36,8 +37,9 @@ class DocsController extends AppController
     public function createDoc()
     {
         $this->checkSession();
-        $text = 'Hello there 👋';
-        $this->render('createDoc', ['text' => $text]);
+        $categoriesManager = new CategoriesManager();
+        $categories = $categoriesManager->getCategories();
+        $this->render('createDoc', ['categories' => $categories]);
         return;
     }
 
@@ -73,7 +75,7 @@ class DocsController extends AppController
             //echo "false";
         }
 
-        $this->myDocs();
+        header("Location: {$url}?page=myDocs");
         return;
     }
 
@@ -95,7 +97,7 @@ class DocsController extends AppController
             //echo "false";
         }
 
-        $this->myDocs();
+        header("Location: {$url}?page=myDocs");
         return;
     }
 
@@ -117,6 +119,10 @@ class DocsController extends AppController
         $docManager = new DocumentManager();
         $doc = $docManager->getDocument($docId);
 
+        if($doc->getOwnerId() != $_SESSION["id"]){
+            header("Location: {$url}?page=myDocs");
+            return;
+        }
         // GET FILE CONTENT
         $file_name =  "Documents/" . $doc->getPath() . $docManager->path_project_connector . $docId . $docManager->path_version_connector . $doc->getVersion();
         $file_manager = new FileManager();
