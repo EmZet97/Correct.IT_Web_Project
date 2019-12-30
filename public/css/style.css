@@ -353,6 +353,45 @@ background-color: #707070;
     color: #707070;
 }
 
+#ColumnTitle{
+    color: #707070;
+    width: 100%;
+    margin: 0 auto;
+    text-align: center;
+    font-weight: bold;
+    border: 1px solid #cccccc;
+    padding: 10px;
+    font-size: 15px;
+    font-family: "Gill Sans MT";
+}
+
+.h3_titles{
+    color: #707070;
+    font-weight: bold;
+    font-size: 15px;
+    font-family: "Gill Sans MT";
+    display: inline;
+}
+
+.fa-star{
+    font-size: 15px;
+    color: gold;
+}
+
+#docContent{
+    border: 1px solid #cccccc;
+    padding: 10px;
+}
+
+#RateContainer{
+    width: 100%;
+    border: 1px solid #cccccc;
+    padding: 10px;
+    position: relative;
+    bottom:50px;
+    text-align: center;
+}
+
 /* LOGIN AND REGISTER PANEL */
 #loginPanel{
     margin-top: 50px;

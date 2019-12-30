@@ -107,7 +107,13 @@ class DocsController extends AppController
         $docId = $_GET['id'];
         $docManager = new DocumentManager();
         $doc = $docManager->getDocument($docId);
-        //echo "document" . $doc;
+
+        // GET FILE CONTENT
+        $file_name =  "Documents/" . $doc->getPath() . $docManager->path_project_connector . $docId . $docManager->path_version_connector . $doc->getVersion();
+        $file_manager = new FileManager();
+        $content = $file_manager->readFile($file_name);
+
+        $doc->setContent($content);
         $this->render('correctDoc', ['doc' => $doc]);
         return;
     }
