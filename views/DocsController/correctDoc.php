@@ -3,7 +3,7 @@
 
 <?php include(dirname(__DIR__).'/head.html'); ?>
 
-<body onload="">
+<body onload="SetComment()">
 <?php include(dirname(__DIR__).'/navbar.php'); ?>
 
 <section class="jumpers">
@@ -36,25 +36,32 @@
                 </script>
                 <div id="RateContainer">
                 <h3 class="h3_titles">Ocena:</h3>
-                <div id="stars">
-                    <i class="far fa-star"></i>
-                    <i class="far fa-star"></i>
-                    <i class="far fa-star"></i>
-                    <i class="far fa-star"></i>
-                    <i class="far fa-star"></i>
+                <div id="stars" onmouseleave="starLeave()">
+                    <i class="fas fa-star" onmouseenter="starEnter(1)" onclick="starClick(1)"></i>
+                    <i class="far fa-star" onmouseenter="starEnter(2)" onclick="starClick(2)"></i>
+                    <i class="far fa-star" onmouseenter="starEnter(3)" onclick="starClick(3)"></i>
+                    <i class="far fa-star" onmouseenter="starEnter(4)" onclick="starClick(4)"></i>
+                    <i class="far fa-star" onmouseenter="starEnter(5)" onclick="starClick(5)"></i>
                 </div>
+                <h3 class="h3_titles" id="last">1</h3>
                 </div>
             </div>
 
-            <input type="hidden" name="content" id="contentPacker"/>
-            <input type="hidden" name="docID" value = <?php echo "'" . $doc->getId() . "'" ?>/>
-            <input type="hidden" name="contentBank" id="contentBank" value = <?php echo "'" . $doc->getContent() . "'" ?>/>
+            <input type="hidden" name="comment" id="contentPacker"/>
+            <input type="hidden" name="rate" id="starsPacker" value="1"/>
 
+            <input type="hidden" name="docID" value = <?php echo "'" . $doc->getId() . "'" ?>/>
+            <input type="hidden" name="docVersion" value = <?php echo "'" . $doc->getVersionId() . "'" ?>/>
+            <input type="hidden" name="contentBank" id="contentBank" value = <?php echo '"' . $doc->getContent() . '"' ?>/>
+            
+            <input type="hidden" id="commentBank" value = <?php echo '"' . $rate->getComment() . '"' ?>/>
+            <input type="hidden" id="rateBank" value = <?php echo "'" . $rate->getRate() . "'" ?>/>
+            
         </div>
     </div>
             
 
-    <input type="submit" id="saveButton" class="fixedButton" onclick="CreateDocument()" value="Zapisz nową wersję"/>
+    <input type="submit" id="saveButton" class="fixedButton" onclick="CorrectDocument()" value="Oceń pracę"/>
     </form>
 </section>
 

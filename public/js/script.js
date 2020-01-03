@@ -4,6 +4,12 @@ function CreateDocument(){
     return;
 }
 
+function CorrectDocument(){
+  var content = document.getElementsByClassName("ql-editor")[0].innerHTML;
+  document.getElementById("contentPacker").value = content;
+  return;
+}
+
 function EditDocument(){
   var content = document.getElementsByClassName("ql-editor")[0].innerHTML;
   document.getElementById("contentPacker").value = content;
@@ -37,4 +43,53 @@ function ChangeCategory(){
       }
     }
   }
+}
+
+var last = 1;
+
+function starEnter(index){
+  var stars = document.getElementsByClassName("fa-star");
+  //starLeave();
+  for(var i = 0; i<= index; i++){
+    stars[i].classList.remove("far");
+    stars[i].classList.add("fas");
+  }
+
+  for(var i = index + 1; i< stars.length; i++){
+    stars[i].classList.remove("fas");
+    stars[i].classList.add("far");
+  }
+
+}
+
+function starLeave(){
+  var stars = document.getElementsByClassName("fa-star");
+
+  for(var i = 0; i<= last; i++){
+    stars[i].classList.remove("far");
+    stars[i].classList.add("fas");
+  }
+
+  for(var i = last + 1; i< stars.length; i++){
+    stars[i].classList.remove("fas");
+    stars[i].classList.add("far");
+  }
+
+  
+}
+
+function starClick(index){
+  last = index;
+  document.getElementById("last").innerHTML = index;
+  document.getElementById("starsPacker").value = index;
+}
+
+function SetComment(){
+  var comment = document.getElementById("commentBank").value;
+  var rate = parseInt(document.getElementById("rateBank").value);
+
+  document.getElementsByClassName("ql-editor")[0].innerHTML = comment;
+  last = rate;
+  starClick(rate);
+  starLeave();
 }

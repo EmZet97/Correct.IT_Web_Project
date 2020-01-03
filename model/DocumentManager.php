@@ -67,7 +67,8 @@ class DocumentManager extends DatabaseConnector
         $document['create_time'],
         $document['category1'],
         $document['category2'],
-        $document['category3']
+        $document['category3'],
+        $document['id_version']
     );
         
         
@@ -125,7 +126,8 @@ class DocumentManager extends DatabaseConnector
                     $document['create_time'],
                     $document['category1'],
                     $document['category2'],
-                    $document['category3']
+                    $document['category3'],
+                    $document['id_version']
                 );
                 $doc->setLikes($this->getVersionAverageRate($document['id_version']));
                 $doc->setComments($this->getVersionCommentsCount($document['id_version']));
@@ -164,7 +166,10 @@ class DocumentManager extends DatabaseConnector
 
             $documents = $stmt->fetchAll(PDO::FETCH_ASSOC);
 
+            
+
             foreach ($documents as $document) {
+                $commented = $this->getUserComment($document['id_version'], $userID) == null ? false : true;
                 $owner = new User($document['id_user'],$document['nick']);
                 $doc = new Document(
                     $owner,
@@ -176,7 +181,9 @@ class DocumentManager extends DatabaseConnector
                     $document['create_time'],
                     $document['category1'],
                     $document['category2'],
-                    $document['category3']
+                    $document['category3'],
+                    $document['id_version'],
+                    $commented
                 );
                 $doc->setLikes($this->getVersionAverageRate($document['id_version']));
                 $doc->setComments($this->getVersionCommentsCount($document['id_version']));
@@ -189,6 +196,81 @@ class DocumentManager extends DatabaseConnector
 
             return $result = [];
         
+        
+    }
+
+    public function getUserComment($versionId, $userId){
+        $stmt = $this->database->connect()->prepare('
+        SELECT u.id_user, u.nick, c.comment, r.rate
+        FROM users u, comment c, rate r
+        WHERE u.id_user = c.id_user
+        AND u.id_user = r.id_user
+        AND u.id_user = :userId
+        AND c.id_version = :versionId
+        AND c.id_version = r.id_version
+            ');
+        $stmt->bindParam(':versionId', $versionId, PDO::PARAM_STR);
+        $stmt->bindParam(':userId', $userId, PDO::PARAM_STR);
+        $stmt->execute();
+
+        $comment = $stmt->fetch(PDO::FETCH_ASSOC);
+
+        if($comment == false) {
+            return null;
+        }
+  
+        $documentRate = new DocumentRate($comment['comment'],$comment['rate'],$comment['nick'],$comment['id_user']);
+
+        return $documentRate;
+    }
+
+    public function rateDocument($userId, $versionId, $comment, $rate){
+
+        $stmt2 = $this->database->connect()->prepare('
+                INSERT INTO `rate` (`id_version`, `id_user`, `rate`) 
+                VALUES (:id_version, :userId, :rate);
+            ');
+            $stmt2->bindParam(':id_version',$versionId, PDO::PARAM_STR);
+            $stmt2->bindParam(':userId', $userId, PDO::PARAM_STR);
+            $stmt2->bindParam(':rate', $rate, PDO::PARAM_STR);
+            $stmt2->execute();
+
+        $stmt = $this->database->connect()->prepare('
+                INSERT INTO `comment` (`id_version`, `id_user`, `comment`) 
+                VALUES (:id_version, :userId, :comment);
+            ');
+            $stmt->bindParam(':id_version',$versionId, PDO::PARAM_STR);
+            $stmt->bindParam(':userId', $userId, PDO::PARAM_STR);
+            $stmt->bindParam(':comment',$comment, PDO::PARAM_STR);
+            $stmt->execute();
+
+        
+    }  
+    
+    public function changeDocumentRate($userId, $versionId, $comment, $rate){
+
+        $stmt2 = $this->database->connect()->prepare('
+                UPDATE `rate` 
+                SET `rate` = :rate 
+                WHERE id_user = :userId 
+                AND id_version = :id_version
+            ');
+            $stmt2->bindParam(':id_version',$versionId, PDO::PARAM_STR);
+            $stmt2->bindParam(':userId', $userId, PDO::PARAM_STR);
+            $stmt2->bindParam(':rate', $rate, PDO::PARAM_STR);
+            $stmt2->execute();
+
+        $stmt = $this->database->connect()->prepare('
+            UPDATE `comment` 
+            SET `comment` = :comment 
+            WHERE id_user = :userId 
+            AND id_version = :id_version
+        ');
+            $stmt->bindParam(':id_version',$versionId, PDO::PARAM_STR);
+            $stmt->bindParam(':userId', $userId, PDO::PARAM_STR);
+            $stmt->bindParam(':comment',$comment, PDO::PARAM_STR);
+            $stmt->execute();
+
         
     }
 

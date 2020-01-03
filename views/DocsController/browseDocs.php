@@ -26,12 +26,14 @@
                 $comments =  $doc->getComments();
                 $check_page = "/?page=correctDoc&id=". $doc->getId();
                 $nick = $doc->getOwnerNick();
-                
+                $checked = $doc->isChecked();
+                $checkedCode = $checked == true ? '<a class="doc-checked-button"><i class="fas fa-check-circle"></i></a>' : '';
                 // HTML generator:
                 echo '
                 <div class="col-12 col-sm-6 col-lg-4 docs-columns">
                 <div class="doc">
                     <div class="doc-header">
+                        ' . $checkedCode . '
                         <i class="fas fa-user doc-icon"></i>
                         <h3 class="doc-owner text">' . $nick . '</h3>
                         <h3 class="doc-create-time text">' . $time . '</h3>

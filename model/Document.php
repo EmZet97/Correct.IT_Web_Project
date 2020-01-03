@@ -21,15 +21,18 @@ class Document
     private $content = "";
 
     private $version;
+    private $versionId;
     
+    private $checked;
 
-    public function __construct($owner, $id, $title, $version, $language, $path, $last_edit, $category1, $category2, $category3)
+    public function __construct($owner, $id, $title, $version, $language, $path, $last_edit, $category1, $category2, $category3, $versionId, $checked = false)
     {
         $this->owner = $owner;
         //$this->owner_nick = $owner_nick;
         $this->id = $id;
         $this->title = $title;
         $this->version = $version;
+        $this->versionId = $versionId;
         $this->path = $path;
         //Set time /////////////////////////
         $now = time(); // or your date as well
@@ -44,6 +47,8 @@ class Document
         $this->category_1 = $category1;
         $this->category_2 = $category2;
         $this->category_3 = $category3;
+
+        $this->checked = $checked;
     }
 
     public function setCategory($value, $category){
@@ -104,6 +109,11 @@ class Document
     public function getVersion()
     {
         return $this->version;
+    }
+
+    public function getVersionId()
+    {
+        return $this->versionId;
     }    
 
     public function getPath()
@@ -150,5 +160,41 @@ class Document
     {
         return $this->language;
     }
+    
+    public function isChecked(){
+        return $this->checked;
+    }
 
+}
+
+class DocumentRate{
+    private $comment;
+    private $rate;
+    private $userId;
+    private $userNick;
+
+    public function __construct($comment, $rate, $userNick, $userId){
+        $this->comment = $comment;
+        $this->rate = $rate;
+        $this->userId = $userId;
+        $this->userNick = $userNick;
+    }
+
+    public function getComment(){
+        return $this->comment;
+    }
+
+    public function getRate(){
+        return $this->rate;
+    }
+    
+    public function getUserId(){
+        return $this->userId;
+    }
+    
+    public function getUserNick(){
+        return $this->userNick;
+    }
+
+    
 }

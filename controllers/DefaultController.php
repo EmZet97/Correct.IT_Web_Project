@@ -31,6 +31,7 @@ class DefaultController extends AppController
 
             $user = $userManager->getUser($email);
 
+            // CHECK TYPED DATA
             if (!$user) {
                 $this->render('login', ['messages' => ['Incorrect nick or email']]);
                 return;
@@ -41,6 +42,8 @@ class DefaultController extends AppController
                 return;
             }
 
+
+            // CREATE NEW USER SESSION
             session_start();
             $_SESSION["id"] = $user->getId();
             $_SESSION["nick"] = $user->getNick();
@@ -56,6 +59,7 @@ class DefaultController extends AppController
 
     public function logout()
     {
+        // DELETE SESSION
         session_unset();
         session_destroy();
 
@@ -67,11 +71,11 @@ class DefaultController extends AppController
         
         $user = null;
 
-        if ($this->isPost()) {
-            
+        if ($this->isPost()) {           
             
             $userManager = new UserManager();
 
+            // CHECK IF EMAIL IS AVAILABLE
             if($userManager->checkIfEmailExist($_POST['email'])){
                 $this->render('register', [
                     'messages' => ['Wpisany email jest zajęty :(']
@@ -79,6 +83,7 @@ class DefaultController extends AppController
                 return;
             }
 
+            // CHECK IF NICK IS AVAILABLE
             if($userManager->checkIfNickExist($_POST['nick'])){
                 $this->render('register', [
                     'messages' => ['Wpisany nick jest zajęty :(']
@@ -86,13 +91,18 @@ class DefaultController extends AppController
                     return;
                 }
 
-                $user = new User(
+            // CREATE NEW USER
+            $user = new User(
                     null,
                   $_POST['nick'],
                   $_POST['email'],
                   $_POST['password']
                 );
+            
+            // CREATE USER IN DATABASE
             $userManager->createUser($user);
+
+            // OPEN LOGIN PANEL
             $this->render('login', [
                 'messages' => ['Konto pomyślnie utworzone']
                 ]);

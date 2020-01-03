@@ -410,6 +410,19 @@ background-color: #707070;
     
 }
 
+.doc-checked-button{
+    position: absolute;
+    right: 10px;
+    top: -5px;
+    background-color: white;
+    
+    
+}
+
+.doc-checked-button i{
+    color: rgb(187, 160, 6);
+}
+
 .doc-delete-button:hover{
     opacity: 0.6;
 }

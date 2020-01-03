@@ -22,10 +22,11 @@ class CategoriesManager extends DatabaseConnector
             if(isset($result))
                 return $result;
 
-            return null;
-        
+            return null;       
         
     }
+
+    
 }
 
 class Category{

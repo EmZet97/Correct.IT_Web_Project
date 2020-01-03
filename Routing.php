@@ -38,17 +38,21 @@ class Routing
                 'controller' => 'DocsController',
                 'action' => 'correctDoc'
             ],
+            'correctDoc_Execute' => [
+                'controller' => 'DocsController',
+                'action' => 'correctDoc_Execute'
+            ],
             'createDoc' => [
                 'controller' => 'DocsController',
                 'action' => 'createDoc'
             ],
-            'deleteDoc' => [
-                'controller' => 'DocsController',
-                'action' => 'deleteDoc'
-            ],
             'createDoc_Execute' => [
                 'controller' => 'DocsController',
                 'action' => 'createDoc_Execute'
+            ],
+            'deleteDoc' => [
+                'controller' => 'DocsController',
+                'action' => 'deleteDoc'
             ],
             'editDoc' => [
                 'controller' => 'DocsController',
