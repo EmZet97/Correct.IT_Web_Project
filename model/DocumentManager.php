@@ -224,6 +224,36 @@ class DocumentManager extends DatabaseConnector
         return $documentRate;
     }
 
+    public function getVersionComments($versionId){
+        $stmt = $this->database->connect()->prepare('
+        SELECT u.id_user, u.nick, c.comment, r.rate
+        FROM users u, comment c, rate r
+        WHERE u.id_user = c.id_user
+        AND u.id_user = r.id_user
+        AND c.id_version = :versionId
+        AND c.id_version = r.id_version
+            ');
+        $stmt->bindParam(':versionId', $versionId, PDO::PARAM_STR);
+        $stmt->execute();
+
+        $comments = $stmt->fetchAll(PDO::FETCH_ASSOC);
+
+        foreach ($comments as $comment) {
+            $rate = new DocumentRate(
+                $comment['comment'],
+                $comment['rate'],
+                $comment['nick'],
+                $comment['id_user']
+            );
+            
+            $result[] = $rate;
+        }
+        if(isset($result))
+            return $result;
+
+        return $result = [];
+    }
+
     public function rateDocument($userId, $versionId, $comment, $rate){
 
         $stmt2 = $this->database->connect()->prepare('

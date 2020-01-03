@@ -6,11 +6,14 @@
 <body onload="SetContent()">
 <?php include(dirname(__DIR__).'/navbar.php'); ?>
 
+
 <section class="jumpers">
     <h2 id="pageTitle">Edytuj pracę</h2>
+    <div id="leftPanel" class="col-8 inline">
     <form action="?page=editDoc_Execute" method="POST">
     <div id="pageContent" class="container">
         <div class="row">
+            
             <!-- Header of page -->
             <div class="col-12 docs-columns">
                 <input type="text" class="docFields" id="docTitle" name="title" readonly value=<?php echo "'" . $doc->getTitle() . "'"?>/>
@@ -45,12 +48,59 @@
             <input type="hidden" name="contentBank" id="contentBank" value = <?php echo "'" . $doc->getContent() . "'" ?>/>
 
         </div>
+        
     </div>
-            
+          
 
     <input type="submit" id="saveButton" class="fixedButton" onclick="CreateDocument()" value="Zapisz nową wersję"/>
     </form>
+    </div>
+    <div id="rightPanel" class="col-4 inline">
+
+    <div id="commentsPanel" class="col-12">
+        <h2 class="comments-title">
+            Dotychczasowe oceny:
+        </h2>
+        <div id="commentsContainer">
+        <?php         
+        if(isset($comments))
+        foreach($comments as $comment){
+        $nick = $comment->getUserNick();
+        $content = $comment->getComment();
+        $rate = $comment->getRate();
+        $s1 = "fas";
+        $s2 = $comment->getRate()>1 ? "fas" : "far";
+        $s3 = $comment->getRate()>2 ? "fas" : "far";
+        $s4 = $comment->getRate()>3 ? "fas" : "far";
+        $s5 = $comment->getRate()>4 ? "fas" : "far";
+        echo '
+        <section class="commentElement">
+        <h2 class="comments-userNick">
+            '. $nick . '
+        </h2>
+        <div class="comments-commentContent">
+            '. $content .'
+        </div>
+        <div class="col-12 comments-commentRate">
+            <div id="stars">
+                <i class="'. $s1 .' fa-star"></i>
+                <i class="'. $s2 .' fa-star"></i>
+                <i class="'. $s3 .' fa-star"></i>
+                <i class="'. $s4 .' fa-star"></i>
+                <i class="'. $s5 .' fa-star"></i>
+            </div>
+        </div>
+    </section>
+    ';
+        }
+    ?>
+</div>
+</div>
+    </div>
 </section>
+
+
+
 
 <?php include(dirname(__DIR__).'/footer.html'); ?>
 </body>

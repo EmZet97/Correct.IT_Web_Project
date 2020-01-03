@@ -160,7 +160,7 @@ class Document
     {
         return $this->language;
     }
-    
+
     public function isChecked(){
         return $this->checked;
     }
@@ -185,7 +185,7 @@ class DocumentRate{
     }
 
     public function getRate(){
-        return $this->rate;
+        return intval ($this->rate);
     }
     
     public function getUserId(){

@@ -308,13 +308,14 @@ background-color: white !important;
 /* Create, edit and comment doc */
 
 .docFields{
-    height: 30px;
+    height: 40px;
     border: 1px solid #b9b9b9;
     width: 100%;
     margin: 0px 0 10px 0;    
     font-family: "Gill Sans MT";
     color: #707070;
     padding: 10px;
+    
 }
 
 .docDropDownFields{
@@ -390,6 +391,66 @@ background-color: #707070;
     position: relative;
     bottom:50px;
     text-align: center;
+}
+
+/* COMMENTS */
+.comments-title{
+    color: #707070;
+    width: 100%;
+    margin: 0 auto;
+    text-align: center;
+    font-weight: bold;
+    padding: 10px;
+    font-size: 15px;
+    font-family: "Gill Sans MT";
+    border: 1px solid #cccccc;
+    margin-bottom: 10px;
+}
+
+#commentsPanel{
+    background-color: white;
+    z-index: 100;
+    text-align: center;
+}
+
+#commentsContainer{
+    width: 100%;    
+    overflow-y: scroll;
+    height: 60vh;
+
+}
+
+.commentElement{
+    border:1px solid #cccccc;
+    margin-bottom: 10px;
+    
+}
+
+.comments-commentContent{
+    border-bottom: 1px solid #cccccc;    
+    font-family: "Gill Sans MT";
+    padding: 10px;
+    color: #707070;
+}
+
+.comments-userNick{
+    color: #707070;
+    width: 100%;
+    margin: 0 auto;
+    text-align: center;
+    font-weight: bold;
+    border-bottom: 1px solid #cccccc;
+    padding: 10px;
+    font-size: 15px;
+    font-family: "Gill Sans MT";
+    padding: 10px;
+    color: #707070;
+}
+
+
+.comments-commentRate{
+    width: 50px;
+    padding: 10px;
 }
 
 /* LOGIN AND REGISTER PANEL */

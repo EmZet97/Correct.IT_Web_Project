@@ -237,6 +237,9 @@ class DocsController extends AppController
             return;
         }
 
+        // GET COMMENTS
+        $comments = $docManager->getVersionComments($doc->getVersionId());
+
         // GET FILE CONTENT
         $file_name =  "Documents/" . $doc->getPath() . $docManager->path_project_connector . $docId . $docManager->path_version_connector . $doc->getVersion();
         $file_manager = new FileManager();
@@ -246,7 +249,7 @@ class DocsController extends AppController
         $doc->setContent($content);
         
         // START PANEL AND SEND DOCUMENT OBJECT
-        $this->render('editDoc', ['doc' => $doc]);
+        $this->render('editDoc', ['doc' => $doc, 'comments' => $comments]);
 
         return;
     }
