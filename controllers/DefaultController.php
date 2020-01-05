@@ -23,6 +23,11 @@ class DefaultController extends AppController
 
     public function login()
     {   
+        if(isset($_SESSION["id"])){
+            $url = "http://$_SERVER[HTTP_HOST]/";
+            header("Location: {$url}?page=myDocs");
+        }
+
         $userManager = new UserManager();
 
         if ($this->isPost()) {
@@ -68,7 +73,10 @@ class DefaultController extends AppController
 
     public function register()
     {
-        
+        if(isset($_SESSION["id"])){
+            $url = "http://$_SERVER[HTTP_HOST]/";
+            header("Location: {$url}?page=myDocs");
+        }
         $user = null;
 
         if ($this->isPost()) {           
@@ -116,5 +124,12 @@ class DefaultController extends AppController
     public function fileNotFound()
     {
         $this->render('fileNotFound');
+    }
+
+    private function checkSession(){
+        // CHECK ID USER SESSION IS STARTED
+        if(!isset($_SESSION["id"]))
+            //IF NOT REDIRECT TO LOGIN PANEL
+            header("Location: {$url}?page=login");
     }
 }

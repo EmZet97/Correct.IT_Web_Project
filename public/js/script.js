@@ -93,3 +93,35 @@ function SetComment(){
   starClick(rate);
   starLeave();
 }
+
+function SaveMyDoc(){
+  var content = document.getElementsByClassName("ql-editor")[0].innerHTML;
+  var userId = document.getElementById("userIdPacker").value;
+  var docId = document.getElementById("docIdPacker").value;
+
+  //alert("uid" + userId + " - did" + docId + " - con" + content);
+  apiUrl = 'http://localhost';
+  //alert("test");
+  $.ajax({
+    url :  '/?page=saveDoc_Execute',
+    method : "POST",
+    data : {
+      content :  content,
+      docID : docId,
+      userID : userId
+    }
+    ,
+    success: function() {
+      document.getElementById("save_img").style.display = "inline";
+      //alert('Success');
+      //getUsers();
+    }});
+
+
+}
+
+
+function typeText(){
+  document.getElementById("save_img").style.display = "none";
+      
+}

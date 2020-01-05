@@ -62,6 +62,10 @@ class Routing
                 'controller' => 'DocsController',
                 'action' => 'editDoc_Execute'
             ],
+            'saveDoc_Execute' => [
+                'controller' => 'DocsController',
+                'action' => 'saveDoc_Execute'
+            ],
             'myDocs' => [
                 'controller' => 'DocsController',
                 'action' => 'myDocs'
@@ -71,6 +75,7 @@ class Routing
 
     public function run()
     {        
+        //http_response_code(404);
         $page = isset($_GET['page']) && isset($this->routes[$_GET['page']]) ? $_GET['page'] : 'login';        
 
         if ($this->routes[$page]) {

@@ -129,10 +129,11 @@ class DocsController extends AppController
             $owner = new User($id);
 
             // CREATE DOCUMENT OBJECT
-            $document = new Document($owner, $docId, "", null, 1, null, null, "", "", "", false);
+            $document = $docManager->getDocument($docId);
+            //$document = new Document($owner, $docId, "", null, 1, null, null, "", "", "", false);
 
             // UPDATE DOCUMENT IN DATABASE
-            $docManager->updateDocument($document, $content);            
+            $docManager->createNewDocumentVersion($document, $content);            
 
         }
         else{
@@ -141,6 +142,39 @@ class DocsController extends AppController
 
         // OPEN MY DOCUMENTS PAGE
         header("Location: {$url}?page=myDocs");
+        return;
+    }
+
+
+    // DOCUMENT SAVE FUNCTION - AJAX
+    public function saveDoc_Execute(){
+        
+        //$this->checkSession();
+
+
+        // GET POSTED DATA
+        $content = $_POST['content'];
+        $docId = $_POST['docID'];
+        $id = $_POST['userID'];
+        // GET USER ID FROM SESSION
+        //$id = $_SESSION["id"];     
+
+        $docManager = new DocumentManager();
+        // CREATE USER OBJECT
+        //$owner = new User($id);
+        
+        // CREATE DOCUMENT OBJECT
+        $document = $docManager->getDocument($docId);
+        //$document = new Document($owner, $docId, "", null, 1, null, null, "", "", "", false);
+        
+        // UPDATE DOCUMENT IN DATABASE
+        $docManager->updateDocumentVersion($document, $content);            
+        
+        
+
+        // OPEN MY DOCUMENTS PAGE
+        //header("Location: {$url}?page=myDocs");
+        //http_response_code(404);
         return;
     }
 

@@ -349,6 +349,17 @@ color: white;
 background-color: #707070;
 }
 
+#saveButton2{
+    bottom: 110px;
+}
+
+#saveButton2 i{
+    position: absolute;
+    right: 15px;
+    top: 15px;
+    display: none;
+}
+
 .fixedButton:hover{
     background-color: white;
     color: #707070;
@@ -416,7 +427,7 @@ background-color: #707070;
 #commentsContainer{
     width: 100%;    
     overflow-y: scroll;
-    height: 60vh;
+    height: calc(100vh - 300px);
 
 }
 

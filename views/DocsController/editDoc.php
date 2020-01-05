@@ -10,7 +10,7 @@
 <section class="jumpers">
     <h2 id="pageTitle">Edytuj pracę</h2>
     <div id="leftPanel" class="col-8 inline">
-    <form action="?page=editDoc_Execute" method="POST">
+    <form action="?page=saveDoc_Execute" method="POST">
     <div id="pageContent" class="container">
         <div class="row">
             
@@ -30,7 +30,7 @@
             <!-- EDITOR -->
             <div class="col-12 docs-columns">
                 <!-- Create the editor container -->
-                <div id="editor">
+                <div id="editor" onkeypress="typeText()">
                 </div>
 
                 <!-- Include the Quill library -->
@@ -44,7 +44,8 @@
                 </script>
             </div>
             <input type="hidden" name="content" id="contentPacker"/>
-            <input type="hidden" name="docID" value = <?php echo "'" . $doc->getId() . "'" ?>/>
+            <input type="hidden" name="docID" id="docIdPacker" value = <?php echo "'" . $doc->getId() . "'" ?>/>
+            <input type="hidden" name="userID" id="userIdPacker" value = <?php echo "'" . $_SESSION["id"] . "'" ?>/>
             <input type="hidden" name="contentBank" id="contentBank" value = <?php echo "'" . $doc->getContent() . "'" ?>/>
 
         </div>
@@ -52,8 +53,12 @@
     </div>
           
 
-    <input type="submit" id="saveButton" class="fixedButton" onclick="CreateDocument()" value="Zapisz nową wersję"/>
+    <input type="submit" id="saveButton" class="fixedButton" onclick="CreateDocument()" value="Utwórz nową wersję"/>
+    
     </form>
+
+    <button id="saveButton2" class="fixedButton" onclick="SaveMyDoc()">Zapisz<i class="fas fa-check-circle" id="save_img"></i></button>
+
     </div>
     <div id="rightPanel" class="col-4 inline">
 

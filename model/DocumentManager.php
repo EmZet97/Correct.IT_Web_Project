@@ -350,13 +350,9 @@ class DocumentManager extends DatabaseConnector
         
     }
 
-    public function updateDocument($document, $content): void
+    public function createNewDocumentVersion($document, $content): void
     {
         $userID = $document->getOwnerId();
-        $title = $document->getTitle();
-        $cat1 = $document->getCategory(1);
-        $cat2 = $document->getCategory(2);
-        $cat3 = $document->getCategory(3);
         $docID = $document->getId();
         $path = "user" . $userID;
         $version = intval($this->getDocumentLastVersion($docID)) + 1;
@@ -378,6 +374,32 @@ class DocumentManager extends DatabaseConnector
 
         // WRITE CONTENT TO FILE
         $file_name =  "Documents/" . $path . $this->path_project_connector . $documentId . $this->path_version_connector . $version;
+        $file_manager = new FileManager();
+        $file_manager->writeFile($file_name, $content);
+        
+    }
+
+    public function updateDocumentVersion($document, $content): void
+    {
+        $userID = $document->getOwnerId();
+        $docID = $document->getId();
+        $path = "user" . $userID;
+        $version = $document->getVersion();
+        $words = str_word_count($content);
+        $versionId = $document->getVersionId();
+
+        // VERSION
+        $stmt = $this->database->connect()->prepare('
+                UPDATE `version`
+                SET `words` = :words 
+                WHERE id_version = :versionId;
+            ');
+        $stmt->bindParam(':words', $words, PDO::PARAM_STR);
+        $stmt->bindParam(':versionId',$versionId, PDO::PARAM_STR);
+        $stmt->execute();
+
+        // WRITE CONTENT TO FILE
+        $file_name =  "Documents/" . $path . $this->path_project_connector . $docID . $this->path_version_connector . $version;
         $file_manager = new FileManager();
         $file_manager->writeFile($file_name, $content);
         
