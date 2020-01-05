@@ -201,7 +201,7 @@ class DocumentManager extends DatabaseConnector
 
     public function getUserComment($versionId, $userId){
         $stmt = $this->database->connect()->prepare('
-        SELECT u.id_user, u.nick, c.comment, r.rate
+        SELECT c.id_comment, u.id_user, u.nick, c.comment, r.rate, c.reward
         FROM users u, comment c, rate r
         WHERE u.id_user = c.id_user
         AND u.id_user = r.id_user
@@ -219,14 +219,26 @@ class DocumentManager extends DatabaseConnector
             return null;
         }
   
-        $documentRate = new DocumentRate($comment['comment'],$comment['rate'],$comment['nick'],$comment['id_user']);
+        $documentRate = new DocumentRate($comment['id_comment'],$comment['comment'],$comment['rate'],$comment['nick'],$comment['id_user'], $comment['reward']);
 
         return $documentRate;
     }
 
+    public function rewardComment($commentId, $reward){
+        $stmt = $this->database->connect()->prepare('
+        UPDATE comment
+        SET reward = :reward
+        WHERE id_comment = :commentId;
+            ');
+        $stmt->bindParam(':reward', $reward, PDO::PARAM_STR);
+        $stmt->bindParam(':commentId', $commentId, PDO::PARAM_STR);
+        $stmt->execute();
+
+    }
+
     public function getVersionComments($versionId){
         $stmt = $this->database->connect()->prepare('
-        SELECT u.id_user, u.nick, c.comment, r.rate
+        SELECT c.id_comment, u.id_user, u.nick, c.comment, r.rate, c.reward
         FROM users u, comment c, rate r
         WHERE u.id_user = c.id_user
         AND u.id_user = r.id_user
@@ -240,10 +252,12 @@ class DocumentManager extends DatabaseConnector
 
         foreach ($comments as $comment) {
             $rate = new DocumentRate(
+                $comment['id_comment'],
                 $comment['comment'],
                 $comment['rate'],
                 $comment['nick'],
-                $comment['id_user']
+                $comment['id_user'],
+                $comment['reward']
             );
             
             $result[] = $rate;

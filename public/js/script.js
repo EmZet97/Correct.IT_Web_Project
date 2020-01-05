@@ -120,6 +120,77 @@ function SaveMyDoc(){
 
 }
 
+function RewardUser(userID, commentID, self){
+  if(self.classList.contains("green"))
+    return;
+
+  var points = 1;
+
+  if(self.parentElement.children[3].classList.contains("red"))
+    {
+      points = 2;
+      //self.parentElement.children[3].classList.remove("red");
+
+    }
+
+  //element.classList.contains(class);
+  //alert("test");
+  $.ajax({
+    url :  '/?page=reward_Execute',
+    method : "POST",
+    data : {
+      points : points,
+      commentID: commentID,
+      userID : userID,
+      dif : 1
+    }
+    ,
+    success: function() {
+      self.classList.add("green");
+      self.parentElement.children[3].classList.remove("red");
+      //self.style.color = "green";
+      //alert('Success');
+      //getUsers();
+    }});
+
+    
+}
+
+function Spam(userID, commentID, self){
+  if(self.classList.contains("red"))
+    return;
+
+  var points = -1;
+
+  if(self.parentElement.children[1].classList.contains("green"))
+    {
+      points = -2;
+      //self.parentElement.children[1].classList.remove("green");
+
+    }
+
+  //element.classList.contains(class);
+  //alert("test");
+  $.ajax({
+    url :  '/?page=reward_Execute',
+    method : "POST",
+    data : {
+      points : points,
+      commentID: commentID,
+      userID : userID,
+      dif : -1
+    }
+    ,
+    success: function() {
+      self.classList.add("red");
+      self.parentElement.children[1].classList.remove("green");
+      //self.style.color = "green";
+      //alert('Success');
+      //getUsers();
+    }});
+
+    
+}
 
 function typeText(){
   document.getElementById("save_img").style.display = "none";

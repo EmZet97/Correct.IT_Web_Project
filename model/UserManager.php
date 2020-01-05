@@ -145,4 +145,16 @@ class UserManager extends DatabaseConnector
             die();
         }
     }
+
+    public function rewardUser($userId, $points): void{
+        $stmt = $this->database->connect()->prepare('
+                UPDATE `users`
+                SET `points` = `points` + :points
+                WHERE `id_user` = :userId;
+            ');
+            $stmt->bindParam(':points', $points, PDO::PARAM_STR);
+            $stmt->bindParam(':userId',$userId, PDO::PARAM_STR);
+            
+            $stmt->execute();
+    }
 }

@@ -405,6 +405,35 @@ background-color: #707070;
 }
 
 /* COMMENTS */
+.left{
+    display: block;
+    font-size: 15px !important;    
+    font-family: "Gill Sans MT";
+}
+.comments-rewardUser{
+    border-top: 1px solid #cccccc;
+}
+
+.comments-rewardUser i{
+    font-size: 20px;
+}
+.green{
+    color: green;
+}
+.red{
+    color: red;
+}
+.ok, .notok{
+    margin: 0 5px 0 5px;
+}
+.ok:hover{
+    color: green;
+}
+
+.notok:hover{
+    color: red;
+}
+
 .comments-title{
     color: #707070;
     width: 100%;

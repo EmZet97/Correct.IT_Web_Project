@@ -168,16 +168,24 @@ class Document
 }
 
 class DocumentRate{
+    private $commentId;
     private $comment;
     private $rate;
     private $userId;
     private $userNick;
+    private $reward;
 
-    public function __construct($comment, $rate, $userNick, $userId){
+    public function __construct($commentId, $comment, $rate, $userNick, $userId, $reward){
+        $this->commentId = $commentId;
         $this->comment = $comment;
         $this->rate = $rate;
         $this->userId = $userId;
         $this->userNick = $userNick;
+        $this->reward = $reward;
+    }
+
+    public function getCommentId(){
+        return $this->commentId;
     }
 
     public function getComment(){
@@ -196,5 +204,7 @@ class DocumentRate{
         return $this->userNick;
     }
 
-    
+    public function getCommentReward(){
+        return $this->reward;
+    }
 }

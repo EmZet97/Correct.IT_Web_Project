@@ -156,12 +156,8 @@ class DocsController extends AppController
         $content = $_POST['content'];
         $docId = $_POST['docID'];
         $id = $_POST['userID'];
-        // GET USER ID FROM SESSION
-        //$id = $_SESSION["id"];     
 
         $docManager = new DocumentManager();
-        // CREATE USER OBJECT
-        //$owner = new User($id);
         
         // CREATE DOCUMENT OBJECT
         $document = $docManager->getDocument($docId);
@@ -171,10 +167,29 @@ class DocsController extends AppController
         $docManager->updateDocumentVersion($document, $content);            
         
         
+        //http_response_code(404);
+        return;
+    }
+
+    // Reward USER FOR COMMENT
+    public function reward_Execute(){
+
+        $userId = $_POST['userID'];
+        $points = $_POST['points'];
+        $id = $_POST['commentID'];
+        $dif = $_POST['dif'];
+
+        $userManager = new UserManager();
+
+        $userManager->rewardUser($userId, $points);
+
+        $docManager = new DocumentManager();
+        $docManager->rewardComment($id, $dif);
 
         // OPEN MY DOCUMENTS PAGE
+        
         //header("Location: {$url}?page=myDocs");
-        //http_response_code(404);
+        //echo $userId . " - " . $points;
         return;
     }
 
@@ -313,5 +328,12 @@ class DocsController extends AppController
         if(!isset($_SESSION["id"]))
             //IF NOT REDIRECT TO LOGIN PANEL
             header("Location: {$url}?page=login");
+
+
+        // Refresh user points
+        $userManager = new UserManager();
+        $user = $userManager->getUser($_SESSION["email"]);        
+        $_SESSION["points"] = $user->getPoints();
+        
     }
 }
