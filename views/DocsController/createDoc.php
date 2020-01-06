@@ -45,7 +45,9 @@
             <!-- EDITOR -->
             <div class="col-12 docs-columns">
                 <!-- Create the editor container -->
+                <div>
                 <div id="editor">
+                </div>
                 </div>
 
                 <!-- Include the Quill library -->
@@ -63,8 +65,10 @@
         </div>
     </div>
             
-
-    <input type="submit" id="saveButton" class="fixedButton" onclick="CreateDocument()" value="Stworz"/>
+    <div id="buttonDiv" class="col-12">
+        <input type="submit" id="saveButton" class="saveButtons" onclick="CreateDocument()" value="Stworz"/>
+    </div>
+    <div class="spacer"></div>
     </form>
 </section>
 

@@ -287,6 +287,11 @@ background-color: white !important;
     top: -20px;
 }
 
+.start_correct:hover{
+    text-decoration: none;
+    color: #333333;
+}
+
 @media only screen and (max-width: 780px) {
     .doc-footer{
         height: 70px;
@@ -331,6 +336,7 @@ background-color: white !important;
     font-family: "Gill Sans MT" !important;
     color: #414141;
     margin-bottom: 50px;
+    min-height: 100px;
 }
 
 .fixedButton{
@@ -349,8 +355,48 @@ color: white;
 background-color: #707070;
 }
 
+
+#buttonDiv{
+    text-align: center;
+    padding: 5px;
+}
+
+#leftColumn{
+    margin-bottom: 20px;
+}
+
+.saveButtons:hover{
+    background-color: white !important;
+    color: #707070 !important;
+}
+
+#saveButton{
+    width: 200px;
+    border: 1px solid #707070;
+    padding: 10px;
+    text-align: center;
+    border-radius: 5px;
+    font-family: "Gill Sans MT";
+    font-weight: bold;
+    color: white;
+    background-color: #707070;
+}
+
+.spacer{
+    height: 55px;
+    width:100%;
+}
+
 #saveButton2{
-    bottom: 110px;
+    width: 200px;
+    border: 1px solid #707070;
+    padding: 10px;
+    text-align: center;
+    border-radius: 5px;
+    font-family: "Gill Sans MT";
+    font-weight: bold;
+    color: white;
+    background-color: #707070;
 }
 
 #saveButton2 i{
@@ -454,10 +500,17 @@ background-color: #707070;
 }
 
 #commentsContainer{
-    width: 100%;    
-    overflow-y: scroll;
-    height: calc(100vh - 300px);
+    width: 100%;
 
+}
+
+@media only screen and (min-width: 992px) {
+    #commentsContainer{
+        width: 100%;    
+        overflow-y: scroll;
+        height: calc(100vh - 300px);
+    
+    }
 }
 
 .commentElement{

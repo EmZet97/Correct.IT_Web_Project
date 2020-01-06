@@ -9,13 +9,13 @@
 
 <section class="jumpers">
     <h2 id="pageTitle">Edytuj pracę</h2>
-    <div id="leftPanel" class="col-8 inline">
+    <div id="leftPanel" class="col-12 col-lg-8 inline">
     <form action="?page=reward_Execute" method="POST">
     <div id="pageContent" class="container">
         <div class="row">
             
             <!-- Header of page -->
-            <div class="col-12 docs-columns">
+            <div class="col-12  docs-columns">
                 <input type="text" class="docFields" id="docTitle" name="title" readonly value=<?php echo "'" . $doc->getTitle() . "'"?>/>
             </div>
             <div class="col-4 docs-columns">
@@ -30,7 +30,9 @@
             <!-- EDITOR -->
             <div class="col-12 docs-columns">
                 <!-- Create the editor container -->
-                <div id="editor" onkeypress="typeText()">
+                <div>
+                    <div id="editor" onkeypress="typeText()">
+                    </div>
                 </div>
 
                 <!-- Include the Quill library -->
@@ -49,27 +51,35 @@
             <input type="hidden" name="points" value = "1"/>
             <input type="hidden" name="contentBank" id="contentBank" value = <?php echo "'" . $doc->getContent() . "'" ?>/>
 
+
+            <div id="buttonDiv" class="col-12">
+                <input type="submit" id="saveButton" class="saveButtons" onclick="CreateDocument()" value="Utwórz nową wersję"/>
+            </div>
         </div>
         
     </div>
           
 
-    <input type="submit" id="saveButton" class="fixedButton" onclick="CreateDocument()" value="Utwórz nową wersję"/>
     
     </form>
-
-    <button id="saveButton2" class="fixedButton" onclick="SaveMyDoc()">Zapisz<i class="fas fa-check-circle" id="save_img"></i></button>
-
+    <div id="buttonDiv" class="col-12">
+        <button id="saveButton2" class="saveButtons" onclick="SaveMyDoc()">Zapisz<i class="fas fa-check-circle" id="save_img"></i></button>
     </div>
-    <div id="rightPanel" class="col-4 inline">
+    <div class="spacer"></div>
+    
+    
+    </div>
+    
+    <div id="rightPanel" class="col-12 col-lg-4 inline">
 
-    <div id="commentsPanel" class="col-12">
+    <div id="commentsPanel" class="container">
         <h2 class="comments-title">
             Dotychczasowe oceny:
         </h2>
-        <div id="commentsContainer">
+        
         <?php         
-        if(isset($comments))
+        if(isset($comments)){
+            echo '<div id="commentsContainer" >';
         foreach($comments as $comment){
         $reward = intval($comment -> getCommentReward());
         $nick = $comment->getUserNick();
@@ -134,8 +144,10 @@
     </section>
     ';
         }
+        echo '</div>';
+    }
     ?>
-</div>
+
 </div>
     </div>
 </section>

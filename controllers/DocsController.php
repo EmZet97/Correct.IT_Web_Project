@@ -255,7 +255,7 @@ class DocsController extends AppController
         $docRate = $docManager->getUserComment($doc->getVersionId(), $_SESSION["id"]);
         if($docRate == null){
             // CREATE DOCUMENT RATE OBJECT
-            $docRate = new DocumentRate("", 1, "", "");
+            $docRate = new DocumentRate(0, "", 1, "", "", 0);
         }
 
         // FINALIZE DOCUMENT OBJECT
