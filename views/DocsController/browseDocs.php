@@ -9,7 +9,18 @@
 
 <section class="jumpers">
     <h2 id="pageTitle">Wybierz pracę do oceny</h2>
+
     <div id="pageContent" class="container">
+        <div id="selectionOptions" class="col-12">
+        <?php
+        if($checked){
+            echo '<a href="/?page=browseDocs&checked=false" id="" class="">Prace nie oceniane</a>  ';
+        }
+        else{
+            echo '<a href="/?page=browseDocs&checked=true" id="" class="">Wszystkie prace</a>  ';
+        }
+        ?>
+        </div>
         <div class="row">
             
         <?php         

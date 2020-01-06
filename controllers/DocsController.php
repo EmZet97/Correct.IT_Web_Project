@@ -2,6 +2,7 @@
 
 require_once "AppController.php";
 
+require_once __DIR__.'/../model/DocumentRate.php';
 require_once __DIR__.'/../model/Document.php';
 require_once __DIR__.'/../model/DocumentManager.php';
 require_once __DIR__.'/../model/CategoriesManager.php';
@@ -28,14 +29,23 @@ class DocsController extends AppController
     {
         $this->checkSession();
 
-        $docManager = new DocumentManager();        
-        $id = $_SESSION["id"];
+        $docManager = new DocumentManager(); 
         
-        // GET DOCUMENTS OF OTHER USERS
-        $docs = $docManager->getOtherUsersDocuments($id);
+        
+        $id = $_SESSION["id"];
+        $checked = true;
+        
+        if(isset($_GET['checked']) && $_GET['checked'] == 'false'){
+            $docs = $docManager->getOtherUsersDocumentsNotChecked($id);
+            $checked = false;
+        }
+        else{
+            // GET DOCUMENTS OF OTHER USERS
+            $docs = $docManager->getOtherUsersDocuments($id);
+        }
 
         // START PANEL
-        $this->render('browseDocs', ['docs' => $docs]);
+        $this->render('browseDocs', ['docs' => $docs, 'checked' => $checked]);
         return;
     }
 

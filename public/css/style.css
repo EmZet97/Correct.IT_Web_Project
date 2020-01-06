@@ -276,6 +276,26 @@ background-color: white !important;
     margin: 0px 8px 0 5px;
 }
 
+#selectionOptions{    
+    margin-bottom: 30px;
+    border-bottom: 3px solid #707070;
+    padding: 8px;
+    padding-left: 0px;
+}
+
+#selectionOptions a{
+    color: white;    
+    background-color: #555555;
+    border: 1px solid #333333;
+    padding: 10px;
+}
+
+#selectionOptions a:hover{
+    color: #555555;
+    text-decoration: none;
+    background-color: white;
+}
+
 .start_correct{
     color: #06AB00;
     border-bottom: 1px solid #06AB00;
@@ -388,6 +408,7 @@ background-color: #707070;
 }
 
 #saveButton2{
+    position: relative;
     width: 200px;
     border: 1px solid #707070;
     padding: 10px;

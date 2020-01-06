@@ -5,7 +5,7 @@ require_once __DIR__.'/DatabaseConnector.php';
 
 class UserManager extends DatabaseConnector
 {
-    public function getUser(string $email): ?User 
+    public function getUser(string $email)
     {
         $stmt = $this->database->connect()->prepare('
             SELECT * FROM users WHERE email = :email
@@ -29,7 +29,7 @@ class UserManager extends DatabaseConnector
         );
     }
 
-    public function getUsers(): array
+    public function getUsers()
     {
         try {
             $stmt = $this->database->connect()->prepare('SELECT * FROM users');
@@ -53,7 +53,7 @@ class UserManager extends DatabaseConnector
         }
     }
 
-    public function createUser($user): void
+    public function createUser($user)
     {
         $nick = $user->getNick();
         $email = $user->getEmail();
@@ -73,7 +73,7 @@ class UserManager extends DatabaseConnector
             $stmt->execute();            
     }
 
-    public function checkIfEmailExist(string $email): bool 
+    public function checkIfEmailExist(string $email) 
     {
         $stmt = $this->database->connect()->prepare('
             SELECT * FROM users WHERE email = :email
@@ -91,7 +91,7 @@ class UserManager extends DatabaseConnector
     }
 
     
-    public function checkIfNickExist(string $nick): bool 
+    public function checkIfNickExist(string $nick) 
     {
         $stmt = $this->database->connect()->prepare('
             SELECT * FROM users WHERE nick = :nick
@@ -108,7 +108,7 @@ class UserManager extends DatabaseConnector
         return true;
     }
 
-    public function delete(int $id): void
+    public function delete(int $id)
     {
         try {
             $stmt = $this->database->connect()->prepare('DELETE FROM users WHERE id = :id;');
@@ -121,7 +121,7 @@ class UserManager extends DatabaseConnector
     }
 
 
-    public function setUser(User $user): void
+    public function setUser(User $user)
     {
         $name = $user->getName();
         $surname = $user->getSurname();
@@ -146,7 +146,7 @@ class UserManager extends DatabaseConnector
         }
     }
 
-    public function rewardUser($userId, $points): void{
+    public function rewardUser($userId, $points){
         $stmt = $this->database->connect()->prepare('
                 UPDATE `users`
                 SET `points` = `points` + :points

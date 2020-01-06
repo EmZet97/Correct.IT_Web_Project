@@ -30,7 +30,7 @@ class DocumentManager extends DatabaseConnector
         return true;
     }
     
-    public function getDocument(string $documentID): ?Document 
+    public function getDocument(string $documentID) 
     {
         $stmt = $this->database->connect()->prepare('
         SELECT DISTINCT u.id_user, u.nick, d.id_document, v.words, d.title, v.version_number, v.id_version, v.create_time, d.path, 
@@ -75,7 +75,7 @@ class DocumentManager extends DatabaseConnector
         return $doc;
     }
 
-    private function getCategory(string $category) : string{
+    private function getCategory(string $category) {
         $stmt = $this->database->connect()->prepare('
         SELECT category.name
         FROM category
@@ -144,7 +144,7 @@ class DocumentManager extends DatabaseConnector
         
     }
 
-    public function getOtherUsersDocuments(string $userID): array
+    public function getOtherUsersDocuments(string $userID)
     {
         
             $stmt = $this->database->connect()->prepare('
@@ -170,6 +170,63 @@ class DocumentManager extends DatabaseConnector
 
             foreach ($documents as $document) {
                 $commented = $this->getUserComment($document['id_version'], $userID) == null ? false : true;
+                $owner = new User($document['id_user'],$document['nick']);
+                $doc = new Document(
+                    $owner,
+                    $document['id_document'],
+                    $document['title'],
+                    $document['version_number'],
+                    $document['language'],
+                    $document['path'],
+                    $document['create_time'],
+                    $document['category1'],
+                    $document['category2'],
+                    $document['category3'],
+                    $document['id_version'],
+                    $commented
+                );
+                $doc->setLikes($this->getVersionAverageRate($document['id_version']));
+                $doc->setComments($this->getVersionCommentsCount($document['id_version']));
+                $doc->setWords($document['words']);
+                
+                $result[] = $doc;
+            }
+            if(isset($result))
+                return $result;
+
+            return $result = [];
+        
+        
+    }
+
+    public function getOtherUsersDocumentsNotChecked(string $userID)
+    {
+        
+            $stmt = $this->database->connect()->prepare('
+            SELECT DISTINCT u.id_user, u.nick, d.id_document, v.words, d.title, v.version_number, v.id_version, v.create_time, d.path, 
+            (SELECT category.name FROM category WHERE category.id_category = d.id_category_1) AS "category1",
+            (SELECT category.name FROM category WHERE category.id_category = d.id_category_2) AS "category2",
+            (SELECT category.name FROM category WHERE category.id_category = d.id_category_3) AS "category3",
+            l.name AS "language"
+            FROM documents AS d, version AS v, users AS u, languages as l, category AS c
+            WHERE d.id_document = v.id_document 
+            AND d.id_owner <> :userID
+            AND d.id_owner = u.id_user
+            AND v.id_version = (SELECT max(version.id_version) FROM version, documents WHERE version.id_document = d.id_document)
+            AND d.id_language = d.id_language
+            ORDER BY v.id_version DESC
+            ');
+            $stmt->bindParam(':userID', $userID, PDO::PARAM_STR);
+            $stmt->execute();
+
+            $documents = $stmt->fetchAll(PDO::FETCH_ASSOC);
+
+            
+
+            foreach ($documents as $document) {
+                $commented = $this->getUserComment($document['id_version'], $userID) == null ? false : true;
+                if($commented)
+                    continue;
                 $owner = new User($document['id_user'],$document['nick']);
                 $doc = new Document(
                     $owner,
@@ -318,7 +375,7 @@ class DocumentManager extends DatabaseConnector
         
     }
 
-    public function createDocument($document, $content): void
+    public function createDocument($document, $content)
     {
         $userID = $document->getOwnerId();
         $title = $document->getTitle();
@@ -364,7 +421,7 @@ class DocumentManager extends DatabaseConnector
         
     }
 
-    public function createNewDocumentVersion($document, $content): void
+    public function createNewDocumentVersion($document, $content)
     {
         $userID = $document->getOwnerId();
         $docID = $document->getId();
@@ -393,7 +450,7 @@ class DocumentManager extends DatabaseConnector
         
     }
 
-    public function updateDocumentVersion($document, $content): void
+    public function updateDocumentVersion($document, $content)
     {
         $userID = $document->getOwnerId();
         $docID = $document->getId();
@@ -419,7 +476,7 @@ class DocumentManager extends DatabaseConnector
         
     }
 
-    public function getVersionAverageRate(string $versionID): ?string 
+    public function getVersionAverageRate(string $versionID) 
     {
         $stmt = $this->database->connect()->prepare('
         SELECT CAST(AVG(r.rate) AS DECIMAL(2,1)) AS "average_rate" FROM rate r, version v
@@ -439,7 +496,7 @@ class DocumentManager extends DatabaseConnector
         return $document['average_rate'];
     }
 
-    public function getUserLastDocumentId(string $userID): ?string 
+    public function getUserLastDocumentId(string $userID) 
     {
         $stmt = $this->database->connect()->prepare('
         SELECT documents.id_document AS "value"
@@ -461,7 +518,7 @@ class DocumentManager extends DatabaseConnector
         return $document['value'];
     }
 
-    public function getDocumentLastVersion(string $documentID): ?string 
+    public function getDocumentLastVersion(string $documentID) 
     {
         $stmt = $this->database->connect()->prepare('
         SELECT MAX(v.version_number) AS "value"
@@ -481,7 +538,7 @@ class DocumentManager extends DatabaseConnector
         return $document['value'];
     }
 
-    public function getVersionCommentsCount(string $versionID): ?string 
+    public function getVersionCommentsCount(string $versionID) 
     {
         $stmt = $this->database->connect()->prepare('
         SELECT COUNT(c.id_comment) AS "comments_count" FROM comment c
@@ -500,7 +557,7 @@ class DocumentManager extends DatabaseConnector
         return $document['comments_count'];
     }
 
-    public function deleteDocument($documentId): void
+    public function deleteDocument($documentId)
     {
         try {
             $stmt = $this->database->connect()->prepare('DELETE FROM documents WHERE id_document = :id;');
@@ -518,7 +575,7 @@ class DocumentManager extends DatabaseConnector
     }
 
 
-    public function setUser(User $user): void
+    public function setUser(User $user)
     {
         $name = $user->getName();
         $surname = $user->getSurname();

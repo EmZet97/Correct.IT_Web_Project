@@ -10,7 +10,7 @@
 <section class="jumpers">
     <h2 id="pageTitle">Edytuj pracę</h2>
     <div id="leftPanel" class="col-12 col-lg-8 inline">
-    <form action="?page=reward_Execute" method="POST">
+    <form action="?page=editDoc_Execute" method="POST">
     <div id="pageContent" class="container">
         <div class="row">
             
@@ -74,7 +74,7 @@
 
     <div id="commentsPanel" class="container">
         <h2 class="comments-title">
-            Dotychczasowe oceny:
+            Oceny użytkowników:
         </h2>
         
         <?php         

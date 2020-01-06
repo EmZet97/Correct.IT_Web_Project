@@ -26,7 +26,7 @@ class User
         return $this->nick;
     }
 
-    public function setNick($nick): void
+    public function setNick($nick)
     {
         $this->nick = $nick;
     }
@@ -36,7 +36,7 @@ class User
         return $this->email;
     }
 
-    public function setEmail($email): void
+    public function setEmail($email)
     {
         $this->email = $email;
     }
@@ -46,7 +46,7 @@ class User
         return $this->password;
     }
 
-    public function setPassword($password): void
+    public function setPassword($password)
     {
         $this->password = md5($password);
     }
