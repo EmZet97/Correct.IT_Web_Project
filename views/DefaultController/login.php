@@ -27,7 +27,7 @@
                    </h3>
                 </div>
               <div class="panel-input-div col-12 col-sm-10 offset-sm-1 col-lg-8 offset-lg-2">
-                   <h3 class="panel-input-title">E-mail lub nick:</h3>
+                   <h3 class="panel-input-title">E-mail:</h3>
                 </div>
                <div class="panel-input-div col-12 col-sm-10 offset-sm-1 col-lg-8 offset-lg-2">
                    <input type="email" name="email" class="panel-text-input" id="inputEmail" placeholder="john.wick@love.guns" required/>

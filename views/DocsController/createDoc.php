@@ -15,6 +15,14 @@
             <div class="col-12 docs-columns">
                 <input type="text" class="docFields" id="docTitle" name="title" placeholder="Tytuł dokumentu" required/>                
             </div>
+            <div class="col-12 docs-columns">
+            <select name="language" class="docDropDownFields docCategories">
+                    <?php foreach($languages as $lang){
+                    echo "<option value=" . $lang['id_language'] . ">Język ". $lang['name'] . "</option>";
+                    }
+                    ?>
+                </select>
+            </div>
             <div class="col-4 docs-columns">
             <select name="c1" class="docDropDownFields docCategories" onchange="ChangeCategory()">
                     <option value="0"> </option>;

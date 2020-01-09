@@ -57,9 +57,11 @@ class DocsController extends AppController
         // GET CATEGORIES FROM DATABASE
         $categoriesManager = new CategoriesManager();
         $categories = $categoriesManager->getCategories();
+        $docManager = new DOcumentManager();
+        $languages = $docManager->getLanguages();
 
         // SEND CATEGORIES TO PANEL
-        $this->render('createDoc', ['categories' => $categories]);
+        $this->render('createDoc', ['categories' => $categories, 'languages' => $languages]);
 
         return;
     }
@@ -94,6 +96,7 @@ class DocsController extends AppController
             $category2 = $_POST['c2'];
             $category3 = $_POST['c3'];
             $content = $_POST['content'];
+            $language = $_POST['language'];
             
             // GET USER ID FROM SESSION
             $id = $_SESSION["id"];         
@@ -104,7 +107,7 @@ class DocsController extends AppController
             $owner = new User($id);
 
             //CREATE NEW DOCUMENT OBJECT
-            $document = new Document($owner, null, $title, null, 1, null, null, $category1, $category2, $category3, false);
+            $document = new Document($owner, null, $title, null, $language, null, null, $category1, $category2, $category3, false);
 
             // CREATE DOCUMENT IN DATABASE
             $docManager->createDocument($document, $content);            

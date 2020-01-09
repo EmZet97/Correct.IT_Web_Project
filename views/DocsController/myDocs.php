@@ -23,6 +23,7 @@
                 $category2 = $doc->getCategory(2);
                 $category3 = $doc->getCategory(3);
                 $words = $doc->getWords();
+                $version = $doc->getVersion();
                 $language = $doc->getLanguage();
                 $likes = $doc->getLikes();
                 $comments =  $doc->getComments();
@@ -41,7 +42,7 @@
                     <div class="doc-content">
                         
                         <div class="doc-content-up">
-                            <h3 class="doc-title text">' . $title . '</h3>
+                            <h3 class="doc-title text">' . $title .' (v' .$version. ')</h3>
                             <p class="doc-categories">Kategorie:</p>
                             <p>' . $category1 . '</p>
                             <p>' . $category2 . '</p>

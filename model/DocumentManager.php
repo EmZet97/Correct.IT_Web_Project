@@ -32,20 +32,27 @@ class DocumentManager extends DatabaseConnector
     
     public function getDocument(string $documentID) 
     {
-        $stmt = $this->database->connect()->prepare('
+        // SQL used in View
+        $sql1 = '
         SELECT DISTINCT u.id_user, u.nick, d.id_document, v.words, d.title, v.version_number, v.id_version, v.create_time, d.path, 
-            (SELECT category.name FROM category WHERE category.id_category = d.id_category_1) AS "category1",
-            (SELECT category.name FROM category WHERE category.id_category = d.id_category_2) AS "category2",
-            (SELECT category.name FROM category WHERE category.id_category = d.id_category_3) AS "category3",
+            (CategoryIdToName(d.id_category_1)) AS "category1",
+            (CategoryIdToName(d.id_category_2)) AS "category2",
+            (CategoryIdToName(d.id_category_3)) AS "category3",
             l.name AS "language"
             FROM documents AS d, version AS v, users AS u, languages as l, category AS c
             WHERE d.id_document = v.id_document 
             AND d.id_document = :documentID
             AND d.id_owner = u.id_user
             AND v.id_version = (SELECT max(version.id_version) FROM version, documents WHERE version.id_document = d.id_document)
-            AND d.id_language = d.id_language
+            AND l.id_language = d.id_language
             ORDER BY v.id_version DESC
-            ');
+            ';
+        // View Select query
+        $sql2 = '
+            SELECT * FROM userdocumentsview
+            WHERE userdocumentsview.documentId = :documentID
+            ';
+        $stmt = $this->database->connect()->prepare($sql2);
         $stmt->bindParam(':documentID', $documentID, PDO::PARAM_STR);
         $stmt->execute();
 
@@ -56,19 +63,19 @@ class DocumentManager extends DatabaseConnector
         }
 
         //echo $user['id_user'];
-        $owner = new User($document['id_user']);
+        $owner = new User($document['userId']);
         $doc = new Document(
-        $owner,
-        $document['id_document'],
-        $document['title'],
-        $document['version_number'],
-        $document['language'],
-        $document['path'],
-        $document['create_time'],
-        $document['category1'],
-        $document['category2'],
-        $document['category3'],
-        $document['id_version']
+            $owner,
+            $document['documentId'],
+            $document['title'],
+            $document['versionNumber'],
+            $document['language'],
+            $document['docPath'],
+            $document['createTime'],
+            $document['c1'],
+            $document['c2'],
+            $document['c3'],
+            $document['versionId']
     );
         
         
@@ -95,7 +102,8 @@ class DocumentManager extends DatabaseConnector
 
     public function getUserDocuments(string $userID)
     {        
-            $stmt = $this->database->connect()->prepare('
+        // SQL used in SQL VIEW
+            $sql1 = '
             SELECT DISTINCT u.id_user, u.nick, d.id_document, v.words, d.title, v.version_number, v.id_version, v.create_time, d.path, 
             (SELECT category.name FROM category WHERE category.id_category = d.id_category_1) AS "category1",
             (SELECT category.name FROM category WHERE category.id_category = d.id_category_2) AS "category2",
@@ -106,31 +114,39 @@ class DocumentManager extends DatabaseConnector
             AND d.id_owner = :userID
             AND d.id_owner = u.id_user
             AND v.id_version = (SELECT max(version.id_version) FROM version, documents WHERE version.id_document = d.id_document)
-            AND d.id_language = d.id_language
+            AND l.id_language = d.id_language
             ORDER BY v.id_version DESC
-            ');
+            ';
+
+            // USE of SQL VIEW
+            $sql2 = '
+            SELECT * FROM userdocumentsview
+            WHERE userdocumentsview.userId = :userID
+            ';
+
+            $stmt = $this->database->connect()->prepare($sql2);
             $stmt->bindParam(':userID', $userID, PDO::PARAM_STR);
             $stmt->execute();
 
             $documents = $stmt->fetchAll(PDO::FETCH_ASSOC);
 
             foreach ($documents as $document) {
-                $owner = new User($document['id_user'],$document['nick']);
+                $owner = new User($document['userId'],$document['nick']);
                 $doc = new Document(
                     $owner,
-                    $document['id_document'],
+                    $document['documentId'],
                     $document['title'],
-                    $document['version_number'],
+                    $document['versionNumber'],
                     $document['language'],
-                    $document['path'],
-                    $document['create_time'],
-                    $document['category1'],
-                    $document['category2'],
-                    $document['category3'],
-                    $document['id_version']
+                    $document['docPath'],
+                    $document['createTime'],
+                    $document['c1'],
+                    $document['c2'],
+                    $document['c3'],
+                    $document['versionId']
                 );
-                $doc->setLikes($this->getVersionAverageRate($document['id_version']));
-                $doc->setComments($this->getVersionCommentsCount($document['id_version']));
+                $doc->setLikes($this->getVersionAverageRate($document['versionId']));
+                $doc->setComments($this->getVersionCommentsCount($document['versionId']));
                 $doc->setWords($document['words']);
                 
                 $result[] = $doc;
@@ -146,21 +162,26 @@ class DocumentManager extends DatabaseConnector
 
     public function getOtherUsersDocuments(string $userID)
     {
-        
-            $stmt = $this->database->connect()->prepare('
-            SELECT DISTINCT u.id_user, u.nick, d.id_document, v.words, d.title, v.version_number, v.id_version, v.create_time, d.path, 
-            (SELECT category.name FROM category WHERE category.id_category = d.id_category_1) AS "category1",
-            (SELECT category.name FROM category WHERE category.id_category = d.id_category_2) AS "category2",
-            (SELECT category.name FROM category WHERE category.id_category = d.id_category_3) AS "category3",
-            l.name AS "language"
-            FROM documents AS d, version AS v, users AS u, languages as l, category AS c
-            WHERE d.id_document = v.id_document 
-            AND d.id_owner <> :userID
-            AND d.id_owner = u.id_user
-            AND v.id_version = (SELECT max(version.id_version) FROM version, documents WHERE version.id_document = d.id_document)
-            AND d.id_language = d.id_language
-            ORDER BY v.id_version DESC
-            ');
+        $sql1 = '
+        SELECT DISTINCT u.id_user, u.nick, d.id_document, v.words, d.title, v.version_number, v.id_version, v.create_time, d.path, 
+        (SELECT category.name FROM category WHERE category.id_category = d.id_category_1) AS "category1",
+        (SELECT category.name FROM category WHERE category.id_category = d.id_category_2) AS "category2",
+        (SELECT category.name FROM category WHERE category.id_category = d.id_category_3) AS "category3",
+        l.name AS "language"
+        FROM documents AS d, version AS v, users AS u, languages as l, category AS c
+        WHERE d.id_document = v.id_document 
+        AND d.id_owner <> :userID
+        AND d.id_owner = u.id_user
+        AND v.id_version = (SELECT max(version.id_version) FROM version, documents WHERE version.id_document = d.id_document)
+        AND l.id_language = d.id_language
+        ORDER BY v.id_version DESC
+        ';
+        // View Select query
+        $sql2 = '
+            SELECT * FROM userdocumentsview
+            WHERE userdocumentsview.userId <> :userID
+            ';
+            $stmt = $this->database->connect()->prepare($sql2);
             $stmt->bindParam(':userID', $userID, PDO::PARAM_STR);
             $stmt->execute();
 
@@ -169,24 +190,24 @@ class DocumentManager extends DatabaseConnector
             
 
             foreach ($documents as $document) {
-                $commented = $this->getUserComment($document['id_version'], $userID) == null ? false : true;
-                $owner = new User($document['id_user'],$document['nick']);
+                $commented = $this->getUserComment($document['versionId'], $userID) == null ? false : true;
+                $owner = new User($document['userId'],$document['nick']);
                 $doc = new Document(
                     $owner,
-                    $document['id_document'],
+                    $document['documentId'],
                     $document['title'],
-                    $document['version_number'],
+                    $document['versionNumber'],
                     $document['language'],
-                    $document['path'],
-                    $document['create_time'],
-                    $document['category1'],
-                    $document['category2'],
-                    $document['category3'],
-                    $document['id_version'],
+                    $document['docPath'],
+                    $document['createTime'],
+                    $document['c1'],
+                    $document['c2'],
+                    $document['c3'],
+                    $document['versionId'],
                     $commented
                 );
-                $doc->setLikes($this->getVersionAverageRate($document['id_version']));
-                $doc->setComments($this->getVersionCommentsCount($document['id_version']));
+                $doc->setLikes($this->getVersionAverageRate($document['versionId']));
+                $doc->setComments($this->getVersionCommentsCount($document['versionId']));
                 $doc->setWords($document['words']);
                 
                 $result[] = $doc;
@@ -200,22 +221,13 @@ class DocumentManager extends DatabaseConnector
     }
 
     public function getOtherUsersDocumentsNotChecked(string $userID)
-    {
-        
-            $stmt = $this->database->connect()->prepare('
-            SELECT DISTINCT u.id_user, u.nick, d.id_document, v.words, d.title, v.version_number, v.id_version, v.create_time, d.path, 
-            (SELECT category.name FROM category WHERE category.id_category = d.id_category_1) AS "category1",
-            (SELECT category.name FROM category WHERE category.id_category = d.id_category_2) AS "category2",
-            (SELECT category.name FROM category WHERE category.id_category = d.id_category_3) AS "category3",
-            l.name AS "language"
-            FROM documents AS d, version AS v, users AS u, languages as l, category AS c
-            WHERE d.id_document = v.id_document 
-            AND d.id_owner <> :userID
-            AND d.id_owner = u.id_user
-            AND v.id_version = (SELECT max(version.id_version) FROM version, documents WHERE version.id_document = d.id_document)
-            AND d.id_language = d.id_language
-            ORDER BY v.id_version DESC
-            ');
+    {   
+        // View Select query
+        $sql = '
+            SELECT * FROM userdocumentsview
+            WHERE userdocumentsview.userId <> :userID
+            ';
+            $stmt = $this->database->connect()->prepare($sql);
             $stmt->bindParam(':userID', $userID, PDO::PARAM_STR);
             $stmt->execute();
 
@@ -224,26 +236,26 @@ class DocumentManager extends DatabaseConnector
             
 
             foreach ($documents as $document) {
-                $commented = $this->getUserComment($document['id_version'], $userID) == null ? false : true;
+                $commented = $this->getUserComment($document['versionId'], $userID) == null ? false : true;
                 if($commented)
                     continue;
-                $owner = new User($document['id_user'],$document['nick']);
+                $owner = new User($document['userId'],$document['nick']);
                 $doc = new Document(
                     $owner,
-                    $document['id_document'],
+                    $document['documentId'],
                     $document['title'],
-                    $document['version_number'],
+                    $document['versionNumber'],
                     $document['language'],
-                    $document['path'],
-                    $document['create_time'],
-                    $document['category1'],
-                    $document['category2'],
-                    $document['category3'],
-                    $document['id_version'],
+                    $document['docPath'],
+                    $document['createTime'],
+                    $document['c1'],
+                    $document['c2'],
+                    $document['c3'],
+                    $document['versionId'],
                     $commented
                 );
-                $doc->setLikes($this->getVersionAverageRate($document['id_version']));
-                $doc->setComments($this->getVersionCommentsCount($document['id_version']));
+                $doc->setLikes($this->getVersionAverageRate($document['versionId']));
+                $doc->setComments($this->getVersionCommentsCount($document['versionId']));
                 $doc->setWords($document['words']);
                 
                 $result[] = $doc;
@@ -255,6 +267,8 @@ class DocumentManager extends DatabaseConnector
         
         
     }
+        
+        
 
     public function getUserComment($versionId, $userId){
         $stmt = $this->database->connect()->prepare('
@@ -294,14 +308,22 @@ class DocumentManager extends DatabaseConnector
     }
 
     public function getVersionComments($versionId){
-        $stmt = $this->database->connect()->prepare('
+
+        // Query from view
+        $sql = '
+        SELECT * FROM commentsview
+        WHERE commentsview.versionId = :versionId
+        ';
+
+        $sql_old = '
         SELECT c.id_comment, u.id_user, u.nick, c.comment, r.rate, c.reward
         FROM users u, comment c, rate r
         WHERE u.id_user = c.id_user
         AND u.id_user = r.id_user
         AND c.id_version = :versionId
         AND c.id_version = r.id_version
-            ');
+            ';
+        $stmt = $this->database->connect()->prepare($sql);
         $stmt->bindParam(':versionId', $versionId, PDO::PARAM_STR);
         $stmt->execute();
 
@@ -309,11 +331,11 @@ class DocumentManager extends DatabaseConnector
 
         foreach ($comments as $comment) {
             $rate = new DocumentRate(
-                $comment['id_comment'],
+                $comment['commentId'],
                 $comment['comment'],
                 $comment['rate'],
                 $comment['nick'],
-                $comment['id_user'],
+                $comment['userId'],
                 $comment['reward']
             );
             
@@ -383,6 +405,7 @@ class DocumentManager extends DatabaseConnector
         $cat2 = $document->getCategory(2);
         $cat3 = $document->getCategory(3);
         $docID = $document->getId();
+        $language = $document->getLanguage();
         $path = "user" . $userID;
         $version = 1;
         $words = str_word_count($content);
@@ -390,7 +413,7 @@ class DocumentManager extends DatabaseConnector
         // DOCUMENT
         $stmt = $this->database->connect()->prepare('
                 INSERT INTO `documents` (`id_owner`, `id_language`, `title`, `path`, `words`, `id_category_1`, `id_category_2`, `id_category_3`) 
-                VALUES (:userID, 1, :title, :path, :words, :cat1, :cat2, :cat3);
+                VALUES (:userID, :language, :title, :path, :words, :cat1, :cat2, :cat3);
             ');
             $stmt->bindParam(':userID', $userID, PDO::PARAM_STR);
             $stmt->bindParam(':title',$title, PDO::PARAM_STR);
@@ -399,6 +422,7 @@ class DocumentManager extends DatabaseConnector
             $stmt->bindParam(':cat1', $cat1, PDO::PARAM_STR);
             $stmt->bindParam(':cat2', $cat2, PDO::PARAM_STR);
             $stmt->bindParam(':cat3', $cat3, PDO::PARAM_STR);
+            $stmt->bindParam(':language', $language, PDO::PARAM_STR);
             $stmt->execute();
             
         $documentId = $this->getUserLastDocumentId($userID);
@@ -555,6 +579,21 @@ class DocumentManager extends DatabaseConnector
 
         
         return $document['comments_count'];
+    }
+
+    public function getLanguages(){
+        $sql = 'SELECT * FROM languages';
+        $stmt = $this->database->connect()->prepare($sql);
+        $stmt->execute();
+
+        $languages = $stmt->fetchAll(PDO::FETCH_ASSOC);
+
+        if($languages == false) {
+            return null;
+        }
+
+        
+        return $languages;
     }
 
     public function deleteDocument($documentId)

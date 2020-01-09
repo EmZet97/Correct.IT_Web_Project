@@ -121,21 +121,21 @@
                 <i class="left">Oceń komentarz:</i>';
                 if($reward == 1){
                     echo 
-                    '<i class="fas fa-thumbs-up ok green" onclick="RewardUser(' . $userId . ', ' . $commentId . ' , this)"></i>
+                    '<i class="fas fa-grin-alt ok green" onclick="RewardUser(' . $userId . ', ' . $commentId . ' , this)"></i>
                     <i> vs </i>
-                    <i class="fas fa-hand-middle-finger notok" onclick="Spam(' . $userId . ', ' . $commentId . ' , this)"></i>';
+                    <i class="fas fa-angry notok" onclick="Spam(' . $userId . ', ' . $commentId . ' , this)"></i>';
                 }
                 else if($reward == -1){
                     echo 
-                    '<i class="fas fa-thumbs-up ok" onclick="RewardUser(' . $userId . ', ' . $commentId . ' , this)"></i>
+                    '<i class="fas fa-grin-alt ok" onclick="RewardUser(' . $userId . ', ' . $commentId . ' , this)"></i>
                     <i> vs </i>
-                    <i class="fas fa-hand-middle-finger notok red" onclick="Spam(' . $userId . ', ' . $commentId . ' , this)"></i>';
+                    <i class="fas fa-angry notok red" onclick="Spam(' . $userId . ', ' . $commentId . ' , this)"></i>';
                 }
                 else{
                     echo 
-                    '<i class="fas fa-thumbs-up ok" onclick="RewardUser(' . $userId . ', ' . $commentId . ' , this)"></i>
+                    '<i class="fas fa-grin-alt ok" onclick="RewardUser(' . $userId . ', ' . $commentId . ' , this)"></i>
                     <i> vs </i>
-                    <i class="fas fa-hand-middle-finger notok" onclick="Spam(' . $userId . ', ' . $commentId . ' , this)"></i>';
+                    <i class="fas fa-angry notok" onclick="Spam(' . $userId . ', ' . $commentId . ' , this)"></i>';
                 }
                 
                 echo '
