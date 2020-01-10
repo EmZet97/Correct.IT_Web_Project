@@ -27,25 +27,30 @@ class DocsController extends AppController
     // PANEL DISPLAYING DOCUMENTS OF OTHER USERS
     public function browseDocs()
     {
-        $this->checkSession();
+        try{
+            $this->checkSession();
 
-        $docManager = new DocumentManager(); 
-        
-        
-        $id = $_SESSION["id"];
-        $checked = true;
-        
-        if(isset($_GET['checked']) && $_GET['checked'] == 'false'){
-            $docs = $docManager->getOtherUsersDocumentsNotChecked($id);
-            $checked = false;
-        }
-        else{
-            // GET DOCUMENTS OF OTHER USERS
-            $docs = $docManager->getOtherUsersDocuments($id);
-        }
+            $docManager = new DocumentManager(); 
+            
+            
+            $id = $_SESSION["id"];
+            $checked = true;
+            
+            if(isset($_GET['checked']) && $_GET['checked'] == 'false'){
+                $docs = $docManager->getOtherUsersDocumentsNotChecked($id);
+                $checked = false;
+            }
+            else{
+                // GET DOCUMENTS OF OTHER USERS
+                $docs = $docManager->getOtherUsersDocuments($id);
+            }
 
-        // START PANEL
-        $this->render('browseDocs', ['docs' => $docs, 'checked' => $checked]);
+            // START PANEL
+            $this->render('browseDocs', ['docs' => $docs, 'checked' => $checked]);
+        }
+        catch(Exception $e){
+            header("Location: {$url}?page=problem");
+        }
         return;
     }
 

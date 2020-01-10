@@ -128,6 +128,12 @@ class DefaultController extends AppController
         $this->render('fileNotFound');
     }
 
+    public function problem()
+    {
+        $message = $_GET['message'];
+        $this->render('problem', ['message' => $message]);
+    }
+
     private function checkSession(){
         // CHECK ID USER SESSION IS STARTED
         if(!isset($_SESSION["id"]))

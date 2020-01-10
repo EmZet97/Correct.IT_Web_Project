@@ -32,7 +32,9 @@ class Database
             return $conn;
         }
         catch(PDOException $e) {
+            header("Location: {$url}?page=problem&message=Baza danych zawiniła");
             die("Connection failed: " . $e->getMessage());
+            
         }
     }
 }

@@ -30,6 +30,10 @@ class Routing
                 'controller' => 'DefaultController',
                 'action' => 'fileNotFound'
             ],
+            'problem' => [
+                'controller' => 'DefaultController',
+                'action' => 'problem'
+            ],
             'browseDocs' => [
                 'controller' => 'DocsController',
                 'action' => 'browseDocs'
