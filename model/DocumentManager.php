@@ -30,8 +30,7 @@ class DocumentManager extends DatabaseConnector
         return true;
     }
     
-    public function getDocument(string $documentID) 
-    {
+    public function getDocument(string $documentID) {
         // SQL used in View
         $sql1 = '
         SELECT DISTINCT u.id_user, u.nick, d.id_document, v.words, d.title, v.version_number, v.id_version, v.create_time, d.path, 
@@ -349,16 +348,21 @@ class DocumentManager extends DatabaseConnector
 
     public function rateDocument($userId, $versionId, $comment, $rate){
 
-        $stmt2 = $this->database->connect()->prepare('
+        $connection = $this->database->connect();
+        $connection->beginTransaction();
+
+        // EXECUTE TRANSACTION
+        try{
+            $stmt = $connection->prepare('
                 INSERT INTO `rate` (`id_version`, `id_user`, `rate`) 
                 VALUES (:id_version, :userId, :rate);
             ');
-            $stmt2->bindParam(':id_version',$versionId, PDO::PARAM_STR);
-            $stmt2->bindParam(':userId', $userId, PDO::PARAM_STR);
-            $stmt2->bindParam(':rate', $rate, PDO::PARAM_STR);
-            $stmt2->execute();
+            $stmt->bindParam(':id_version',$versionId, PDO::PARAM_STR);
+            $stmt->bindParam(':userId', $userId, PDO::PARAM_STR);
+            $stmt->bindParam(':rate', $rate, PDO::PARAM_STR);
+            $stmt->execute();
 
-        $stmt = $this->database->connect()->prepare('
+            $stmt = $connection->prepare('
                 INSERT INTO `comment` (`id_version`, `id_user`, `comment`) 
                 VALUES (:id_version, :userId, :comment);
             ');
@@ -367,32 +371,51 @@ class DocumentManager extends DatabaseConnector
             $stmt->bindParam(':comment',$comment, PDO::PARAM_STR);
             $stmt->execute();
 
+            $connection->commit();
+        }
+        catch(PDOException $e){
+            $connection->rollBack();
+            return;
+        }
+
         
     }  
     
     public function changeDocumentRate($userId, $versionId, $comment, $rate){
 
-        $stmt2 = $this->database->connect()->prepare('
+        $connection = $this->database->connect();
+        $connection->beginTransaction();
+
+        // EXECUTE TRANSACTION
+        try{
+            $stmt = $connection->prepare('
                 UPDATE `rate` 
                 SET `rate` = :rate 
                 WHERE id_user = :userId 
                 AND id_version = :id_version
             ');
-            $stmt2->bindParam(':id_version',$versionId, PDO::PARAM_STR);
-            $stmt2->bindParam(':userId', $userId, PDO::PARAM_STR);
-            $stmt2->bindParam(':rate', $rate, PDO::PARAM_STR);
-            $stmt2->execute();
+            $stmt->bindParam(':id_version',$versionId, PDO::PARAM_STR);
+            $stmt->bindParam(':userId', $userId, PDO::PARAM_STR);
+            $stmt->bindParam(':rate', $rate, PDO::PARAM_STR);
+            $stmt->execute();
 
-        $stmt = $this->database->connect()->prepare('
-            UPDATE `comment` 
-            SET `comment` = :comment 
-            WHERE id_user = :userId 
-            AND id_version = :id_version
-        ');
+            $stmt = $connection->prepare('
+                UPDATE `comment` 
+                SET `comment` = :comment 
+                WHERE id_user = :userId 
+                AND id_version = :id_version
+            ');
             $stmt->bindParam(':id_version',$versionId, PDO::PARAM_STR);
             $stmt->bindParam(':userId', $userId, PDO::PARAM_STR);
             $stmt->bindParam(':comment',$comment, PDO::PARAM_STR);
             $stmt->execute();
+
+            $connection->commit();
+        }
+        catch(PDOException $e){
+            $connection->rollBack();
+            return;
+        }
 
         
     }
@@ -410,8 +433,13 @@ class DocumentManager extends DatabaseConnector
         $version = 1;
         $words = str_word_count($content);
 
-        // DOCUMENT
-        $stmt = $this->database->connect()->prepare('
+       
+        $connection = $this->database->connect();
+        $connection->beginTransaction();
+
+        // EXECUTE TRANSACTION
+        try{
+            $stmt = $connection->prepare('
                 INSERT INTO `documents` (`id_owner`, `id_language`, `title`, `path`, `words`, `id_category_1`, `id_category_2`, `id_category_3`) 
                 VALUES (:userID, :language, :title, :path, :words, :cat1, :cat2, :cat3);
             ');
@@ -425,18 +453,26 @@ class DocumentManager extends DatabaseConnector
             $stmt->bindParam(':language', $language, PDO::PARAM_STR);
             $stmt->execute();
             
-        $documentId = $this->getUserLastDocumentId($userID);
-        $create_time = date("Y-m-d");
-        // VERSION
-        $stmt = $this->database->connect()->prepare('
-                INSERT INTO `version` (`id_document`, `version_number`, `create_time`, `words`) 
-                VALUES (:id_document, :version_number, :create_time, :words);
-            ');
-        $stmt->bindParam(':id_document', $documentId, PDO::PARAM_STR);
-        $stmt->bindParam(':version_number',$version, PDO::PARAM_STR);
-        $stmt->bindParam(':create_time',$create_time, PDO::PARAM_STR);
-        $stmt->bindParam(':words',$words, PDO::PARAM_STR);
-        $stmt->execute();
+            $documentId = $this->getUserLastDocumentId($userID);
+            $create_time = date("Y-m-d");
+            // VERSION
+            $stmt = $connection->prepare('
+                    INSERT INTO `version` (`id_document`, `version_number`, `create_time`, `words`) 
+                    VALUES (:id_document, :version_number, :create_time, :words);
+                ');
+            $stmt->bindParam(':id_document', $documentId, PDO::PARAM_STR);
+            $stmt->bindParam(':version_number',$version, PDO::PARAM_STR);
+            $stmt->bindParam(':create_time',$create_time, PDO::PARAM_STR);
+            $stmt->bindParam(':words',$words, PDO::PARAM_STR);
+            $stmt->execute();
+
+            //COMMIT TRANSACTION
+            $connection->commit();
+        }
+        catch(PDOException $e){
+            $connection->rollBack();
+            return;
+        }
 
         // WRITE CONTENT TO FILE
         $file_name =  "Documents/" . $path . $this->path_project_connector . $documentId . $this->path_version_connector . $version;
@@ -598,18 +634,24 @@ class DocumentManager extends DatabaseConnector
 
     public function deleteDocument($documentId)
     {
-        try {
-            $stmt = $this->database->connect()->prepare('DELETE FROM documents WHERE id_document = :id;');
+        $connection = $this->database->connect();
+        $connection->beginTransaction();
+
+        // EXECUTE TRANSACTION
+        try{
+            $stmt = $connection->prepare('DELETE FROM documents WHERE id_document = :id;');
             $stmt->bindParam(':id', $documentId, PDO::PARAM_INT);
             $stmt->execute();
 
-            $stmt = $this->database->connect()->prepare('DELETE FROM version WHERE id_document = :id;');
+            $stmt = $connection->prepare('DELETE FROM version WHERE id_document = :id;');
             $stmt->bindParam(':id', $documentId, PDO::PARAM_INT);
             $stmt->execute();
-
+            //COMMIT TRANSACTION
+            $connection->commit();
         }
-        catch(PDOException $e) {
-            die();
+        catch(PDOException $e){
+            $connection->rollBack();
+            return;
         }
     }
 
